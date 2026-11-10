@@ -82,7 +82,7 @@ test('Windows Settings and Control Panel selectors contain expected tools',async
 })
 
 test('module registers presets after action definitions and registers upgrade migration', async()=>{
-  assert.equal(RegisteredUpgradeScripts.length,1)
+  assert.equal(RegisteredUpgradeScripts.length,2)
   const inst=new Class()
   const ordered=[]
   inst.setActionDefinitions=defs=>{ordered.push('actions');assert.ok(defs.hotkey)}

@@ -10,8 +10,8 @@ function sameWrap(value, template) {
     ? {isExpression:false,value} : value
 }
 function shortcutFromText(text) {
-  const parts = String(text || '').toUpperCase().split('+').map(s=>s.trim()).filter(Boolean)
-  if(!parts.length) return null
+  const parts = String(text || '').toUpperCase().split('+').map(s=>s.trim())
+  if(parts.some(part=>!part)) return null
   const state = {ctrl:false,shift:false,alt:false,win:false}
   for (const part of parts.slice(0,-1)) {
     const flag=MODIFIERS[part]
@@ -39,7 +39,8 @@ function migrateExisting(_context, props) {
     } else if(['hotkey','key_down','key_up'].includes(action.actionId)) {
       if (Object.prototype.hasOwnProperty.call(options,'keys') && !Object.prototype.hasOwnProperty.call(options,'mode')) {
         const raw=optionValue(options.keys)
-        const parsed=typeof raw==='string'? shortcutFromText(raw):null
+        // A later script cannot recover expression metadata discarded here.
+        const parsed=!options.keys?.isExpression && typeof raw==='string'? shortcutFromText(raw):null
         if(parsed){
           action.options={mode:put('mode','builder'),...Object.fromEntries(Object.entries(parsed).map(([k,v])=>[k,put(k,v)]))}
         } else {
@@ -50,7 +51,7 @@ function migrateExisting(_context, props) {
       }
     } else if(action.actionId==='scroll') {
       const value=Number(optionValue(options.steps))
-      if(Number.isSafeInteger(value) && value!==0 && Math.abs(value)<=20){
+      if(!options.steps?.isExpression && Number.isSafeInteger(value) && value!==0 && Math.abs(value)<=20){
         action.actionId='scroll_slider'
         action.options={axis:options.axis??put('axis','vertical'),magnitude:put('magnitude',Math.abs(value)),reverse:put('reverse',value<0)}
         change=true
@@ -61,4 +62,19 @@ function migrateExisting(_context, props) {
   }
   return {updatedConfig:null,updatedSecrets:null,updatedActions,updatedFeedbacks:[]}
 }
-module.exports={upgradeScripts:[migrateExisting],shortcutFromText}
+// Additive repair for actions left behind by index 0, including installations
+// where that script has already run. Preserve the signed field verbatim so
+// Companion evaluates its expression once, before the callback.
+function repairLegacyScroll(_context, props) {
+  const updatedActions=[]
+  for (const action of props.actions || []) {
+    if(!action || action.actionId!=='scroll' || !action.options)continue
+    const options=action.options
+    const sample=Object.values(options)[0]
+    action.actionId='scroll_slider'
+    action.options={...options,mode:sameWrap('advanced',sample)}
+    updatedActions.push(action)
+  }
+  return {updatedConfig:null,updatedSecrets:null,updatedActions,updatedFeedbacks:[]}
+}
+module.exports={upgradeScripts:[migrateExisting,repairLegacyScroll],shortcutFromText}

@@ -6,13 +6,14 @@
   "type": "commonjs",
   "main": "src/main.cjs",
   "engines": {
-    "node": ">=20"
+    "node": "^22.8.0"
   },
   "scripts": {
-    "test": "node --test src/*.test.cjs"
+    "test": "node --test src/*.test.cjs",
+    "validate": "node tools/validate-manifest.cjs"
   },
   "dependencies": {
-    "@companion-module/base": "^1.13.0"
+    "@companion-module/base": "1.13.6"
   },
   "license": "MIT"
 }

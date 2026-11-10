@@ -87,7 +87,7 @@ class OpenListener extends InstanceBase {
     for(const [id,name] of [['hotkey','Press keyboard shortcut'],['key_down','Hold keyboard shortcut'],['key_up','Release keyboard shortcut']]){
       actions[id]={name,options:comboOptions,callback: async ev=>{
         const o=ev.options
-        const raw=String(o.keys||'').trim()
+        const raw=String(o.keys??'').trim()
         // Existing saved configurations may predate the new mode field.
         const useAdvanced=o.mode==='advanced' || (!o.mode && raw)
         const keys=useAdvanced ? raw : [o.ctrl&&'CTRL',o.shift&&'SHIFT',o.alt&&'ALT',o.win&&'WIN',String(o.key||'F23')].filter(Boolean).join('+')
@@ -105,11 +105,19 @@ class OpenListener extends InstanceBase {
     actions.scroll_slider = {
       name:'Mouse wheel scroll',
       options:[
+        {type:'dropdown',id:'mode',label:'Scroll configuration',default:'builder',choices:[
+          {id:'builder',label:'Slider + direction'}, {id:'advanced',label:'Existing signed value / expression'}]},
         {type:'dropdown',id:'axis',label:'Axis',default:'vertical',choices:[{id:'vertical',label:'Vertical'},{id:'horizontal',label:'Horizontal'}]},
-        {type:'number',id:'magnitude',label:'Scroll steps',default:1,min:1,max:20,step:1,range:true},
-        {type:'checkbox',id:'reverse',label:'Reverse direction (negative)',default:false}
+        {type:'number',id:'magnitude',label:'Scroll steps',default:1,min:1,max:20,step:1,range:true,isVisibleExpression:'$(options:mode) != "advanced"'},
+        {type:'checkbox',id:'reverse',label:'Reverse direction (negative)',default:false,isVisibleExpression:'$(options:mode) != "advanced"'},
+        {type:'number',id:'steps',label:'Signed scroll steps (nonzero)',default:1,min:-20,max:20,step:1,isVisibleExpression:'$(options:mode) == "advanced"'}
       ],
       callback:async(ev)=>{
+        if(ev.options.mode==='advanced') {
+          const steps=Number(ev.options.steps)
+          if(!Number.isSafeInteger(steps) || steps===0 || Math.abs(steps)>20) throw Error('Signed scroll steps must be -20 to -1 or 1 to 20')
+          return this.send({type:'scroll',axis:ev.options.axis,steps})
+        }
         const raw = Number(ev.options.magnitude)
         if (!Number.isSafeInteger(raw) || raw < 1 || raw > 20) throw Error('Scroll steps must be between 1 and 20')
         return this.send({type:'scroll',axis:ev.options.axis,steps:ev.options.reverse ? -raw : raw})

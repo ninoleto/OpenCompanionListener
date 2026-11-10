@@ -1,0 +1,17 @@
+'use strict'
+const assert = require('node:assert/strict')
+const {validateManifest} = require('@companion-module/base')
+const manifest = require('../companion/manifest.json')
+const pkg = require('../package.json')
+const lock = require('../package-lock.json')
+const base = require('@companion-module/base/package.json')
+
+validateManifest(manifest, false)
+assert.equal(manifest.id, 'community-openlistener')
+assert.equal(manifest.version, pkg.version)
+assert.equal(manifest.runtime.type, 'node22')
+assert.equal(manifest.runtime.apiVersion.split('.').slice(0, 2).join('.'), base.version.split('.').slice(0, 2).join('.'))
+assert.equal(pkg.dependencies['@companion-module/base'], base.version)
+assert.equal(lock.packages['node_modules/@companion-module/base'].version, base.version)
+assert.equal(pkg.engines.node, lock.packages[''].engines.node)
+console.log(`Manifest valid: ${manifest.id} ${pkg.version}, installed base ${base.version}`)

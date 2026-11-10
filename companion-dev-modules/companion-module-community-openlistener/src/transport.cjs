@@ -19,17 +19,40 @@ async function request(config, keyHex, method, path, command = null) {
   const port = Number(config.port || 17992)
   if (!/^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname) || port < 1 || port > 65535) throw new Error('Invalid listener IP / port')
   return new Promise((resolve, reject) => {
-    const req = http.request({ hostname, port, method, path, headers, agent, timeout: 3500 }, res => {
+    let settled = false
+    let req, response, deadline
+    const finish = (err, value) => {
+      if (settled) return
+      settled = true
+      clearTimeout(deadline)
+      if (err) {
+        response?.destroy()
+        req?.destroy()
+        reject(err)
+      } else resolve(value)
+    }
+    // Bound socket queueing and peers that trickle data, as well as inactivity.
+    deadline = setTimeout(() => finish(new Error('Listener timed out')), 3500)
+    req = http.request({ hostname, port, method, path, headers, agent, timeout: 3500 }, res => {
+      response = res
       const chunks = []; let size = 0
-      res.on('data', chunk => {size += chunk.length; if (size <= 8192) chunks.push(chunk) })
+      res.on('data', chunk => {
+        size += chunk.length
+        if (size > 8192) return finish(new Error('Listener response too large'))
+        chunks.push(chunk)
+      })
+      res.on('aborted', () => finish(new Error('Listener response interrupted')))
+      res.on('error', err => finish(new Error('Listener response error: ' + err.message)))
+      res.on('close', () => { if (!res.complete) finish(new Error('Listener response closed before completion')) })
       res.on('end', () => {
+        if (!res.complete) return finish(new Error('Listener response interrupted'))
         const raw = Buffer.concat(chunks).toString('utf8')
-        if (res.statusCode < 200 || res.statusCode >= 300) return reject(new Error(`Listener HTTP ${res.statusCode}: ${raw.slice(0,200)}`))
-        try { resolve(JSON.parse(raw)) } catch { reject(new Error('Listener sent invalid JSON')) }
+        if (res.statusCode < 200 || res.statusCode >= 300) return finish(new Error(`Listener HTTP ${res.statusCode}: ${raw.slice(0,200)}`))
+        try { finish(null, JSON.parse(raw)) } catch { finish(new Error('Listener sent invalid JSON')) }
       })
     })
-    req.on('timeout', () => req.destroy(new Error('Listener timed out')))
-    req.on('error', reject)
+    req.on('timeout', () => finish(new Error('Listener timed out')))
+    req.on('error', err => finish(err))
     req.end(body)
   })
 }

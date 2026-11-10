@@ -92,6 +92,14 @@ and notices. Run Defender or another trusted antivirus scanner on the EXE if
 available; record a scanner failure as unverified. Never modify live user settings
 or a live Companion installation during this verification.
 
+For a limited native-binary check on an isolated Windows account, run
+`node tools/smoke_listener.cjs <candidate.exe>`. It refuses an occupied dashboard
+port, gives the child a fresh LOCALAPPDATA fixture under .cache, and checks UI
+guards, signed Node-to-Go status, settings/replay/key rotation, duplicate process
+exit and shutdown. It injects no input, opens no browser/apps and writes no
+startup registry settings. It does not replace the manual smoke checklist; the
+local session could not run it because port 17993 was already occupied.
+
 ## Remaining release gates
 
 Follow `SMOKE_TEST.md` on isolated Windows 10/11 and Companion hosts. Unit tests

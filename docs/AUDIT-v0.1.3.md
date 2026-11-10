@@ -10,7 +10,7 @@ work. Nothing has been published or installed into a live Companion instance.
 | Finding | Current disposition |
 | --- | --- |
 | A01 | Fixed: exact dashboard authority/Origin and state-read header guards; regression coverage. |
-| A02 | Compiler pinned to Go 1.27.4 in CI/tooling. Source scan clean; final candidate binary verification follows the packaging commit. Original EXE remains untouched. |
+| A02 | Compiler pinned to Go 1.27.4 in CI/tooling. Source and rebuilt binary vulnerability scans report no vulnerabilities; x64 GUI build verified. Original EXE remains untouched. |
 | A03 | Fixed in source: preserve expression wrappers, retain migration index 0, additive index 1 repairs stranded scroll actions. Real base 1.13.6 upgrade processor tests pass. Actual Companion import/export remains a gate; already-lost expressions require the backup export. |
 | A04 | Fixed for settings saves and in-process restart. Full process exit still clears the memory-only cache; limitation documented. |
 | A05 | Fixed: serialize updates, bind/persist before activation, clean temporary files; failed rotation, network save, endpoint bind/rename, and concurrent saves covered. |
@@ -18,15 +18,31 @@ work. Nothing has been published or installed into a live Companion instance.
 | A07 | Corrected authority claims in README, SECURITY, architecture and contributor/agent guidance; existing launching behavior preserved. Success text now says OS accepted. |
 | A08 | Go binary redistribution notice included and verified against toolchain. Module ZIP does not bundle dependencies. Artwork authorship/permission remains unresolved and blocks publication. |
 | A09 | Base 1.13.6 pinned with lockfile; Node 22.x aligned; clean install and installed-library validation added to CI. Companion 4.1 is the upstream API minimum, not completed host certification. |
-| A10 | Deterministic three-archive builder/checksums and guarded install/rollback documentation added. Final archive verification follows the packaging commit. Manual desktop/Companion, antivirus and owner publication gates remain. |
+| A10 | Three candidate archives/checksums built twice byte-identically; contents/CRCs/source hashes/Go notice verified. Extracted module clean install/validation/28 tests pass. Guarded install/rollback docs added. Manual desktop/Companion, antivirus and owner publication gates remain. |
 
-Fresh verification before packaging: Windows/amd64 Go 1.27.4 race tests pass
+Fresh verification: Windows/amd64 Go 1.27.4 race tests pass
 15 top-level tests plus 20 key subtests; both vet modes pass. Node 22.23.4 clean
 install (17 dependencies), real base manifest validation and 28/28 Node tests
-pass. npm audit reports zero advisories. govulncheck v1.9.0 source scan reports no
+pass, including a clean install and rerun from the extracted module ZIP. npm audit reports zero advisories. govulncheck v1.9.0 source and binary scans report no
 vulnerabilities (database updated 2026-11-05). See HANDOFF.md for the current
 session and the release instructions for exact commands. Initial Node sandbox
-workers failed with EPERM before running; the authorized rerun passed.
+workers failed with EPERM before running; the authorized rerun passed. Python's
+private temporary build directory was likewise inaccessible in the sandbox;
+the authorized packaging rerun succeeded with two byte-identical build sets.
+
+The EXE is 6,990,848 bytes, SHA-256
+`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`,
+Go 1.27.4, Windows/amd64 GUI, CGO=0, GOAMD64=v1. Checkpoint archive build and
+content verification used commit `a9b6ae3`; final candidates include the later
+evidence/tooling commit identified in their BUILD-INFO.json and are rebuilt with
+the same process. Final archives/checksums live under ignored
+`dist/publication-candidate/`, with a separate reproduction directory.
+
+The limited binary smoke tool stopped before launching any process because
+dashboard port 17993 was occupied (`EADDRINUSE`, exit 1). No live dashboard was
+read or changed. Defender returned exit 0 but explicitly **skipped the file**;
+this is not a clean scan. The unchanged artwork files, original snapshots, user
+configuration, registry startup and installed Companion module were preserved.
 
 **Decision remains HOLD.** Candidate packaging does not establish artwork rights,
 actual Windows/Companion behavior, an antivirus result, owner repository links or

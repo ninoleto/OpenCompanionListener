@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest an improvement or platform feature
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposed behavior
+      description: "Explain impact on current Companion button compatibility."
+    validations:
+      required: true
+  - type: textarea
+    id: platforms
+    attributes:
+      label: Platform and compatibility considerations
+      description: "Windows first; Linux is not currently supported."

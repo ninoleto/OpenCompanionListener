@@ -1,0 +1,34 @@
+{
+  "type": "connection",
+  "id": "community-openlistener",
+  "name": "Open Companion Listener",
+  "shortname": "OpenListener",
+  "description": "Free, independent Windows desktop input and application launcher",
+  "version": "0.1.3",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Community Contributors"
+    }
+  ],
+  "runtime": {
+    "type": "node22",
+    "api": "nodejs-ipc",
+    "apiVersion": "1.13.0",
+    "entrypoint": "../src/main.cjs"
+  },
+  "legacyIds": [],
+  "manufacturer": "Community",
+  "products": [
+    "Open Companion Listener"
+  ],
+  "keywords": [
+    "keyboard",
+    "mouse",
+    "scroll",
+    "launch",
+    "windows"
+  ],
+  "repository": "",
+  "bugs": ""
+}

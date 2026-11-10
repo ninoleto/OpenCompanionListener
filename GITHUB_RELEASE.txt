@@ -1,0 +1,41 @@
+Open Companion Listener v0.1.3 — Windows x64
+
+Free, open-source Windows desktop control for Bitfocus Companion.
+
+A lightweight Go listener with its own Companion connection module. No subscription, cloud account, Python installation or license activation required.
+
+FEATURES
+- Native keyboard input: F1–F24, numpad, navigation, media, single key press/hold/release
+- Keyboard shortcut builders: modifier checkboxes + key dropdown, including Hold and Release
+- Native mouse clicks, hold/release, relative movement and vertical/horizontal scrolling
+- Scroll speed slider (1–20) with Reverse checkbox
+- Dedicated Num Lock Toggle / ON / OFF
+- Open websites, Windows applications, files and folders
+- Windows 10/11 Settings and Control Panel selector actions
+- 38 drag-and-drop Companion preset buttons (Windows, Chrome, Editing, Mouse, Settings)
+- Native tray: Open GUI, Restart Listener, Exit
+- Silent launch; optional Start with Windows toggle (per-user, no elevation)
+- Signed API commands, nonce/timestamp checks and trusted Companion host IP
+
+INSTALLATION — WINDOWS
+1. Extract the Windows x64 ZIP to a permanent folder.
+2. Run OpenCompanionListener.exe. It starts silently in the notification area.
+3. Open GUI from the tray (or double-click tray icon) to configure network and pairing key.
+4. Restrict inbound TCP 17992 to the trusted Companion host using Windows Firewall.
+
+INSTALLATION — BITFOCUS COMPANION
+1. Copy companion-module-community-openlistener into Companion's developer/extra module directory.
+2. On the Companion host, in that module folder: npm install --omit=dev
+3. Verify: node --test src/*.test.cjs
+4. Restart Companion when safe, then add or update the Open Companion Listener connection using the Windows PC IP, port 17992, and pairing key.
+5. Drag optional presets onto buttons from Companion's Presets tab.
+
+UPGRADING FROM 0.1.2
+Back up your existing Companion config and module directory first. The updated module includes an action migration script to translate prior shortcut/scroll options. Existing listener network settings and pairing key remain unchanged.
+
+NOTES
+Windows x64 only. The executable is not code-signed. Keyboard/mouse injection is subject to Windows focus/security restrictions. Signed API requests are not encrypted; use a trusted network and firewall.
+
+MIT License. Complete Go/JavaScript source and documentation are included.
+
+Verification: Automated tests and Windows cross-build passed. Windows startup and Companion migration still require desktop verification before broad deployment.

@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible problem with the Windows listener or Companion module
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not paste pairing keys, private hostnames, or sensitive logs."
+  - type: input
+    id: version
+    attributes:
+      label: Listener and Companion module versions
+      placeholder: "Listener 0.1.3; module 0.1.3; Companion 5.x"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Windows and Companion host versions
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: "Use dummy paths/IPs and redact pairing keys."
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior, expected behavior, sanitized logs
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I have removed private credentials and personal information from the report.
+          required: true

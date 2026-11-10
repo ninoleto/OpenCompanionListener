@@ -1,0 +1,29 @@
+# Runtime secrets and user state
+settings.json
+settings.json.tmp
+*.env
+.env*
+*.log
+*.bak
+
+# Build artifacts
+OpenCompanionListener.exe
+*.exe
+*.zip
+*.msi
+*.pdb
+*.test
+*.prof
+coverage.out
+
+# Node dependencies and local caches
+node_modules/
+.npm/
+.cache/
+.DS_Store
+Thumbs.db
+
+# IDE and machine-local metadata
+.vscode/
+.idea/
+*.swp

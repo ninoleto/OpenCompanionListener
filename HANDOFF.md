@@ -1,5 +1,23 @@
 # Development handoff — Open Companion Listener
 
+## 2026-11-11 audit handoff — publication on HOLD
+
+This section supersedes the release-readiness claims and next actions in the historical handoff below. The owner requested findings before corrective implementation and prohibited publication. The source audit is complete; the candidate is **not ready for public release**.
+
+- **Branch/commit:** local branch `audit/v0.1.3`; supplied source baseline `cd2f0430d968794007f89facb64cb62f6f08c855`. The incoming workspace had no Git history. This checkout was extracted from the supplied GitHub source ZIP, whose SHA-256 is recorded in [the audit report](docs/AUDIT-v0.1.3.md).
+- **Objective:** audit completeness, security, privacy, licensing, buildability, tests, public documentation, and release readiness while preserving working behavior.
+- **Changes:** added `docs/AUDIT-v0.1.3.md` and this handoff section. Generated a local untracked module `package-lock.json` during dependency verification; it is evidence, not an approved dependency change. No application/module implementation changed. Parent audit directory contains isolated tools, logs, executable, and defect probes; workspace-root HANDOFF points here.
+- **Verification:** Windows/amd64 Go 1.27.4 `go test -race -v ./...` passed (7 top-level tests, 20 key subtests; exit 0). `go vet ./...` passed with both CGO=1 and CGO=0 (exit 0 each). Required GUI Windows build passed (exit 0). Node 22.23.4 original tests passed 16/16. Dependency install, installed-base manifest validation, and npm pack dry run passed. `npm audit` reported zero advisories. Icon-resource regeneration was byte-identical. Existing source/Windows ZIP and inner checksums match; advertised module ZIP is missing.
+- **Defect evidence:** added probes fail 3 Go, 3 migration, and 1 transport assertions. Confirmed foreign-Host pairing-key disclosure, replay acceptance after unchanged settings save, active-key change on persistence failure, broken legacy scroll migration/expression metadata loss, and pending transport promises after response abort. See report A01–A06 for precise evidence and fixes.
+- **Security/licensing risks:** original EXE embeds Go 1.23.2; binary vulnerability scan reports 67 standard-library advisories (not 67 proven exploits). Fresh Go 1.27.4 source/binary scans report none. The file-launch authority is broader than the README's no-shell claim. Go binary redistribution notices are missing; artwork provenance remains unconfirmed. Public source scan found no credential/personal-path matches; surrounding historical workspace has private deployment material and must not be uploaded wholesale.
+- **Not verified:** actual Windows input, tray, sign-in startup, launch completion, real Companion host migration, all presets, and Windows 10/11 matrix. No live user configuration or registry writes performed. Defender scan failed to run (`0x80508023`, exit 2); no clean antivirus claim. Original and rebuilt EXEs are unsigned. No historical upstream commit, release tag, public GitHub URL, or byte-identical reproduction of the original EXE was established.
+- **Unresolved:** audit A01–A10, including dependency/engine drift, missing module archive, notices/provenance, public install/build instructions, and manual smoke evidence. No application fixes have been applied because findings are being reported first.
+- **Rollback:** original snapshots, EXE, archives, and checksums are untouched. Audit artifacts are isolated and unapproved; no live deployment or publication to revert.
+
+**Single next safe action:** after reviewing the audit, implement and regression-test A01 dashboard authority validation on this branch. Keep publication blocked until the other findings and manual release gates are resolved.
+
+## Historical handoff (retained for context; not current release approval)
+
 **Last verified source baseline:** `v0.1.3`, released package built 2026-11-10.  
 **Scope:** Windows 10/11 x64 listener + Bitfocus Companion `community-openlistener` module.  
 **Project purpose:** A free, independent, lightweight desktop-control system. Public contributions and forks are explicitly welcomed (MIT).

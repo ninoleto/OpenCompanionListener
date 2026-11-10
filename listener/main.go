@@ -25,6 +25,9 @@ type event struct {
 	Kind    string `json:"kind"`
 }
 type app struct {
+	// Serialize persistence and listener lifecycle changes. Never hold mu while
+	// acquiring settingsMu; API requests only need mu for their state snapshot.
+	settingsMu sync.Mutex
 	mu         sync.RWMutex
 	config     Config
 	configFile string
@@ -45,14 +48,26 @@ func (a *app) appendEvent(kind, message string) {
 	}
 }
 func (a *app) start(c Config) error {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/status", a.authHandler)
-	mux.HandleFunc("/v1/command", a.authHandler)
-	s := &http.Server{Handler: mux, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 8192}
+	a.settingsMu.Lock()
+	defer a.settingsMu.Unlock()
+	return a.startLocked(c)
+}
+func (a *app) startLocked(c Config) error {
 	ln, err := net.Listen("tcp", addr(c))
 	if err != nil {
 		return err
 	}
+	a.installListener(c, ln)
+	return nil
+}
+
+// installListener publishes a prepared listener after all fallible preparation
+// (including settings persistence, when needed) has succeeded.
+func (a *app) installListener(c Config, ln net.Listener) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/v1/status", a.authHandler)
+	mux.HandleFunc("/v1/command", a.authHandler)
+	s := &http.Server{Handler: mux, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 8192}
 	a.mu.Lock()
 	old := a.server
 	oldLn := a.listener
@@ -61,7 +76,9 @@ func (a *app) start(c Config) error {
 	a.config = c
 	a.lastError = ""
 	a.started = time.Now()
-	a.replay = newReplayProtector()
+	if a.replay == nil {
+		a.replay = newReplayProtector()
+	}
 	a.mu.Unlock()
 	if oldLn != nil {
 		_ = oldLn.Close()
@@ -75,12 +92,13 @@ func (a *app) start(c Config) error {
 		}
 	}()
 	a.appendEvent("ok", "Listening on "+addr(c)+" · trusted "+c.TrustedIP)
-	return nil
 }
 
 // restart closes the API listener before rebinding the same address. The
 // local dashboard and tray remain running even if the API rebinding fails.
 func (a *app) restart() error {
+	a.settingsMu.Lock()
+	defer a.settingsMu.Unlock()
 	a.mu.Lock()
 	c := a.config
 	old := a.server
@@ -93,7 +111,7 @@ func (a *app) restart() error {
 	if old != nil {
 		_ = old.Close()
 	}
-	if err := a.start(c); err != nil {
+	if err := a.startLocked(c); err != nil {
 		a.mu.Lock()
 		a.lastError = err.Error()
 		a.mu.Unlock()
@@ -152,7 +170,7 @@ func (a *app) authHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "execution failed: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	a.appendEvent("action", "Executed "+cmd.Type+" from "+c.TrustedIP)
+	a.appendEvent("action", "OS accepted "+cmd.Type+" from "+c.TrustedIP)
 	_, _ = io.WriteString(w, `{"ok":true}`)
 }
 func (a *app) uiHandler(w http.ResponseWriter, r *http.Request) {
@@ -160,6 +178,22 @@ func (a *app) uiHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Content-Security-Policy", "default-src 'none'; img-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'")
+	// Loopback binding alone does not prevent DNS rebinding. Use the canonical
+	// dashboard authority, and guard reads as well as mutations.
+	const authority = "127.0.0.1:17993"
+	if r.Host != authority || (r.URL.Host != "" && r.URL.Host != authority) {
+		http.Error(w, "invalid dashboard host", http.StatusForbidden)
+		return
+	}
+	if origin := r.Header.Get("Origin"); origin != "" && origin != "http://"+authority {
+		http.Error(w, "invalid origin", http.StatusForbidden)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/ui/") &&
+		(r.Header.Get("X-OCL-Local-UI") != "1" || r.Header.Get("Sec-Fetch-Site") == "cross-site") {
+		http.Error(w, "local UI request required", http.StatusForbidden)
+		return
+	}
 	if r.URL.Path == "/icon.png" && r.Method == "GET" {
 		b, _ := uiFiles.ReadFile("ui/icon.png")
 		w.Header().Set("Content-Type", "image/png")
@@ -193,11 +227,6 @@ func (a *app) uiHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "UI header required", http.StatusForbidden)
 		return
 	}
-	origin := r.Header.Get("Origin")
-	if origin != "" && origin != "http://127.0.0.1:17993" {
-		http.Error(w, "invalid origin", http.StatusForbidden)
-		return
-	}
 	if r.URL.Path == "/ui/save" {
 		var candidate struct {
 			ListenIP  string `json:"listen_ip"`
@@ -208,6 +237,8 @@ func (a *app) uiHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "invalid settings", 400)
 			return
 		}
+		a.settingsMu.Lock()
+		defer a.settingsMu.Unlock()
 		a.mu.RLock()
 		old := a.config
 		a.mu.RUnlock()
@@ -219,21 +250,29 @@ func (a *app) uiHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), 400)
 			return
 		}
+		var prepared net.Listener
 		if addr(c) != addr(old) {
 			// Avoid losing a working server due to a typo. Bind the new endpoint first.
-			if err := a.start(c); err != nil {
+			var err error
+			prepared, err = net.Listen("tcp", addr(c))
+			if err != nil {
 				http.Error(w, "Could not bind new address: "+err.Error(), 409)
 				return
 			}
+		}
+		if err := saveConfig(a.configFile, c); err != nil {
+			if prepared != nil {
+				_ = prepared.Close()
+			}
+			http.Error(w, "Could not persist settings: "+err.Error(), 500)
+			return
+		}
+		if prepared != nil {
+			a.installListener(c, prepared)
 		} else {
 			a.mu.Lock()
 			a.config = c
-			a.replay = newReplayProtector()
 			a.mu.Unlock()
-		}
-		if err := saveConfig(a.configFile, c); err != nil {
-			http.Error(w, "Could not persist settings: "+err.Error(), 500)
-			return
 		}
 		a.appendEvent("ok", "Network settings saved")
 		w.Header().Set("Content-Type", "application/json")
@@ -258,20 +297,24 @@ func (a *app) uiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.URL.Path == "/ui/rotate" {
+		a.settingsMu.Lock()
+		defer a.settingsMu.Unlock()
 		var b [32]byte
 		if _, err := rand.Read(b[:]); err != nil {
 			http.Error(w, "secure random unavailable", 500)
 			return
 		}
-		a.mu.Lock()
-		a.config.Secret = hex.EncodeToString(b[:])
+		a.mu.RLock()
 		c := a.config
-		a.replay = newReplayProtector()
-		a.mu.Unlock()
+		a.mu.RUnlock()
+		c.Secret = hex.EncodeToString(b[:])
 		if err := saveConfig(a.configFile, c); err != nil {
 			http.Error(w, "save failed", 500)
 			return
 		}
+		a.mu.Lock()
+		a.config = c
+		a.mu.Unlock()
 		a.appendEvent("ok", "Pairing key rotated; update Companion module")
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = io.WriteString(w, `{"ok":true}`)

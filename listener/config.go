@@ -81,12 +81,23 @@ func saveConfig(path string, c Config) error {
 	if err != nil {
 		return err
 	}
-	tmp := path + ".tmp"
-	if err = os.WriteFile(tmp, b, 0600); err != nil {
+	file, err := os.CreateTemp(filepath.Dir(path), ".settings-*.tmp")
+	if err != nil {
+		return err
+	}
+	tmp := file.Name()
+	defer os.Remove(tmp)
+	defer file.Close()
+	if _, err = file.Write(b); err != nil {
+		return err
+	}
+	if err = file.Sync(); err != nil {
+		return err
+	}
+	if err = file.Close(); err != nil {
 		return err
 	}
 	if err = os.Rename(tmp, path); err != nil {
-		_ = os.Remove(tmp)
 		return err
 	}
 	return nil

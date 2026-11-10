@@ -1,8 +1,11 @@
-name: Tests and Windows build
+name: Tests and reproducible candidate packages
 
 on:
   push:
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   go-tests:
@@ -11,27 +14,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version-file: listener/go.mod
+          go-version: '1.27.4'
+          cache: false
       - name: Go tests with race detector
         working-directory: listener
         run: go test -race ./...
       - name: Go vet
         working-directory: listener
         run: go vet ./...
-      - name: Vet Windows target
-        working-directory: listener
-        env:
-          GOOS: windows
-          GOARCH: amd64
-          CGO_ENABLED: "0"
-        run: go vet ./...
-      - name: Build Windows executable
-        working-directory: listener
-        env:
-          GOOS: windows
-          GOARCH: amd64
-          CGO_ENABLED: "0"
-        run: go build -trimpath -ldflags='-s -w -H windowsgui' -o ../OpenCompanionListener.exe .
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build twice from committed source and compare
+        run: |
+          python tools/package_release.py --output dist/first
+          python tools/package_release.py --output dist/second
+          diff dist/first/SHA256SUMS.txt dist/second/SHA256SUMS.txt
+          cd dist/first
+          sha256sum --check SHA256SUMS.txt
+      # This builds local candidates only; no release upload or publication.
       # Compilation cannot verify GUI, tray, SendInput, firewall or Windows autostart.
   companion-tests:
     runs-on: ubuntu-latest
@@ -42,6 +43,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22.23.4'
+          cache: npm
+          cache-dependency-path: companion-dev-modules/companion-module-community-openlistener/package-lock.json
+      - name: Install the locked production dependency tree
+        run: npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+      - name: Validate against installed Companion base
+        run: npm run validate
       - name: Module tests
         run: node --test src/*.test.cjs

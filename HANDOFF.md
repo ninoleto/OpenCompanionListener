@@ -1,5 +1,21 @@
 # Development handoff — Open Companion Listener
 
+## 2026-11-11 publication-fix continuation — local candidates only
+
+This section supersedes the audit-only and historical next actions below.
+Publication remains **on HOLD**; the owner explicitly prohibited GitHub publishing.
+
+- **Branch/commit:** continuing `fix/v0.1.3-publication` from audit commit `5faf3f1` (source baseline `cd2f043`). This session preserves and completes the prior session's uncommitted fixes; the implementation commit containing this section is the packaging checkpoint. Exact candidate commits are recorded in each BUILD-INFO.json.
+- **Objective:** retain completed security/migration/transport fixes, finish dependency and packaging work, verify clean builds and document release gates without changing live deployments or preserved snapshots.
+- **Files changed:** listener config/main/dashboard and security regressions; module main/transport/upgrades/tests, pinned package/lock and real-base manifest validator; deterministic archive builder/toolchain pins, CI, Git attributes/ignores, Go license/third-party notices, README/security/architecture/install/release/smoke/changelog/release draft and audit/handoff docs.
+- **Verified so far:** fresh Windows Go 1.27.4 race run: 15 top-level tests plus 20 key subtests, PASS exit 0; Windows vet with CGO=1 and CGO=0 PASS exit 0. Node 22.23.4 clean `npm ci` installed 17 packages; base 1.13.6 real manifest validation and all 28 Node tests PASS exit 0. npm audit: zero advisories, exit 0. govulncheck v1.9.0 source scan: no vulnerabilities, exit 0 (database updated 2026-11-05). Packaging/binary verification is the next step after the reviewed source commit; later evidence below will record results.
+- **Compatibility:** wire format, pairing keys, ports, connection ID, action IDs and all 38 presets retained. Upgrade index 0 is retained with expression-loss prevention; index 1 repairs stranded scroll actions. Expressions already destroyed by an old migration need a pre-upgrade export. Dashboard uses only the canonical numeric loopback URL. Existing app launch behavior is preserved and documented as broad user-session authority.
+- **Not performed:** live Companion install/import-export, Windows desktop input, tray observation, Explorer restart, sign-in autostart/registry mutation, Windows 10/11 matrix, independent installation, signing or publication. Tests only use temporary settings and ephemeral network fixtures.
+- **Security risks/unresolved:** HMAC is not encryption; executable arguments allow interpreters; replay cache is memory-only across full process exits; in-flight requests can finish under their captured settings. Artwork rights remain unconfirmed. Actual repository/security URLs and prior-publication/version status remain owner decisions. No antivirus clean claim is made. Physical desktop smoke evidence is still required.
+- **Rollback:** original v0.1.3 archives/snapshots remain untouched outside this checkout. New builds go under ignored `dist/` directories and refuse overwrite. No real settings, registry values, installed module or Companion configuration was changed. For future deployments restore both old module and matching exported configuration.
+
+**Single next safe action:** build and verify two local candidate sets from the committed packaging checkpoint, preserving the publication hold.
+
 ## 2026-11-11 audit handoff — publication on HOLD
 
 This section supersedes the release-readiness claims and next actions in the historical handoff below. The owner requested findings before corrective implementation and prohibited publication. The source audit is complete; the candidate is **not ready for public release**.

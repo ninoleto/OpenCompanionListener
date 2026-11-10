@@ -18,6 +18,8 @@ Read this file **first** before modifying any application or Companion module co
 5. **Tray:** Start silently; no automatic browser dashboard. Open GUI, Restart Listener, Exit; avoid duplicate instances. Per-user Windows autostart must remain opt-in and must not require elevation.
 6. **Security boundary:** Never add unrestricted network-to-shell execution or expose the local settings UI on LAN/Internet without a separate security design and explicit tests. Windows input injection still obeys OS security boundaries; do not bypass them.
 
+   Existing `open_file` executable/argument launching already permits interpreters and registered URI handlers. Treat pairing as full desktop-user authority, not a restricted launcher. Preserve existing launching behavior; the rule above prohibits adding new shell endpoints and must not be used to claim existing authenticated actions cannot execute code.
+
 ## Source map
 
 | Area | Files |

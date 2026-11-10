@@ -1,6 +1,8 @@
 # Open Companion Listener
 
-**Version 0.1.3 — Windows release** · Free and open source · MIT License
+**Version 0.1.3 — local publication-fix candidate, publication on HOLD** · Free and open source · MIT License
+
+The preserved v0.1.3 snapshots are rollback references. New archives use `-candidate` names and are not approved releases. See [the audit](docs/AUDIT-v0.1.3.md) and [current handoff](HANDOFF.md) for evidence and remaining gates.
 
 Open Companion Listener is a lightweight Windows desktop-control application with its **own Bitfocus Companion connection module**. Control Windows keyboard, mouse, scrolling, file and application launching from a Stream Deck, Loupedeck, or any surface supported by Companion. No subscription, cloud account, Python runtime, or license activation is required.
 
@@ -24,7 +26,7 @@ Open Companion Listener is a lightweight Windows desktop-control application wit
 
 ## Windows installation
 
-1. Download `OpenCompanionListener-v0.1.3-Windows-x64.zip` and extract it to a **permanent folder** (for example `C:\Apps\OpenCompanionListener`). Do not run the EXE from inside the ZIP.
+1. Obtain the reviewed Windows x64 archive and verify it against its `SHA256SUMS.txt`. The local build is named `OpenCompanionListener-v0.1.3-candidate-Windows-x64.zip`. Extract to a **permanent folder** (for example `C:\Apps\OpenCompanionListener`). Do not run the EXE from inside the ZIP.
 2. Run `OpenCompanionListener.exe`. **No browser window opens automatically.** Find the icon in the Windows notification area, right-click **Open GUI**, or double-click the icon. The dashboard is `http://127.0.0.1:17993/` on this PC only.
 3. In Settings, set the Windows PC's **Listen IP**, the **Trusted Companion server IP**, and API port (default **17992**). Save settings.
 4. Copy the 64-character pairing key from Settings to the custom Companion connection. Do not publish or screenshot it.
@@ -35,34 +37,21 @@ Closing the browser tab does not stop the listener. Use the system tray's **Exit
 
 ### Upgrading Windows from 0.1.2
 
-Exit the previous application from its tray menu, save its EXE as a backup, extract the new build and run the new EXE. Your existing settings and pairing key under `%LOCALAPPDATA%\OpenCompanionListener\settings.json` are retained. Windows startup is OFF until you enable it in the dashboard.
+Exit the previous application from its tray menu, save its EXE as a backup, extract the new build and run the new EXE. Your existing settings and pairing key under `%LOCALAPPDATA%\OpenCompanionListener\settings.json` are retained. Startup remains opt-in; verify the existing entry and its path before changing it.
 
 **Important:** This version is not code-signed. Windows SmartScreen may warn about an unrecognized publisher. Review the source/checksum. The new startup registry switch requires a real Windows desktop smoke test before production use.
 
 ## Bitfocus Companion module installation
 
-The distribution includes the **module source folder**:
+The distribution includes the **module source folder and dependency lockfile**:
 
 `companion-dev-modules/companion-module-community-openlistener/`
 
 Copy this folder to the *developer / extra module parent path* configured in Bitfocus Companion. It is not a ZIP-based in-app upload.
 
-Example for a Linux Companion host with a configured developer module path:
+Use Companion 4.1+ with API 1.13/node22 support and Node 22.8+ within the 22.x line. This is the API minimum; an actual Companion host has not yet completed candidate smoke testing. In a staging copy, run `npm ci --omit=dev --ignore-scripts --no-audit --no-fund`, `npm run validate`, then `npm test`, stopping on any failure. Dependencies are downloaded during installation; normal use needs no cloud connection.
 
-```bash
-# Back up the currently installed module before replacing files.
-SRC="/path/to/extracted/companion-module-community-openlistener"
-DEST="$HOME/companion-module-active/companion-module-community-openlistener"
-
-test "$(node -e "console.log(require(process.argv[1]).version)" "$SRC/package.json")" = "0.1.3" || exit 1
-cp -a "$DEST" "$HOME/openlistener-module-backup-$(date +%Y%m%d-%H%M%S)"
-cp -a "$SRC/." "$DEST/"
-cd "$DEST"
-npm install --omit=dev
-node --test src/*.test.cjs
-```
-
-Reload Companion only when safe: restarting the host service temporarily interrupts your existing Companion connections. On systemd installations it may be `sudo systemctl restart companion.service`. Keep an export/backup of the Companion configuration before updating a module with existing buttons.
+Follow [first-install, upgrade and rollback instructions](docs/COMPANION-INSTALL.md). Export the Companion configuration before upgrades and stop the test host before replacing its module. Reload only when safe; restarting Companion interrupts connections.
 
 ### Companion actions
 
@@ -80,29 +69,53 @@ Use **Open Companion Listener → Add action**, or the **Presets** tab for ready
 
 ## Security
 
-Remote commands are sent via HTTP with an HMAC-SHA256 signature, timestamp and nonce. **Payloads are authenticated but not encrypted.** Use a trusted LAN or private overlay and restrict incoming traffic using Windows Firewall. The pairing key is stored in a local user configuration file. Do not expose the API publicly. Arbitrary remote shell execution is not supported.
+Remote commands are sent via HTTP with an HMAC-SHA256 signature, timestamp and nonce. **Payloads are authenticated but not encrypted.** Use a trusted LAN or private overlay and restrict incoming traffic using Windows Firewall. The pairing key is stored in a local user configuration file. Do not expose the API publicly. Pairing grants desktop-user execution authority: the file/app launcher accepts executables and arguments, including interpreters. The absence of a dedicated shell action is not an execution sandbox. See [SECURITY.md](SECURITY.md), including the full-process-restart replay limitation.
 
 The local dashboard is loopback-only (`127.0.0.1:17993`). Windows startup uses the per-user registry and launches only after the user signs in; it does **not** run as a Windows service.
 
 ## Developer build
 
-The Go module has no external Go dependencies.
+Use Go **1.27.4**, Node **22.23.4**, and the checked-in dependency lockfile. The Go language directive is a language minimum, not the release compiler selection. Windows race tests require CGO and a compatible 64-bit MinGW C compiler on PATH; the release EXE uses `CGO_ENABLED=0`.
 
-```bash
-cd listener
+PowerShell 7, from the repository root (stop if any command fails):
+
+```powershell
+$env:CGO_ENABLED = '1'
+Push-Location listener
 go test -race ./...
-GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...
-GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags='-s -w -H windowsgui' -o ../OpenCompanionListener.exe .
-
-cd ../companion-dev-modules/companion-module-community-openlistener
-node --test src/*.test.cjs
+go vet ./...
+$env:GOOS = 'windows'; $env:GOARCH = 'amd64'; $env:CGO_ENABLED = '0'
+go vet ./...
+go build -trimpath -buildvcs=false -ldflags='-s -w -H windowsgui' -o ../OpenCompanionListener.exe .
+Pop-Location
+Push-Location companion-dev-modules/companion-module-community-openlistener
+npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+npm run validate
+npm test
+Pop-Location
 ```
 
-The Windows PE icon resource is generated from the included `.ico` file. The full application and module source, MIT license, and developer handoff are included.
+Bash:
+
+```bash
+set -eu
+cd listener
+go test -race ./...
+go vet ./...
+GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...
+GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags='-s -w -H windowsgui' -o ../OpenCompanionListener.exe .
+
+cd ../companion-dev-modules/companion-module-community-openlistener
+npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+npm run validate
+npm test
+```
+
+The Go module has no external dependencies. Python 3.11+ is needed only for deterministic archive packaging or optional icon regeneration, never to run the listener. From clean committed source, run `python tools/package_release.py --output dist/candidate-1`; see [release instructions](docs/RELEASING.md) for reproduction and checksum verification. PowerShell users with the Python launcher can use `py -3.13` in place of `python`.
 
 ## License
 
-MIT License. Free to use, fork, modify, and redistribute under the license terms. Community contributions are welcome. The future Linux backend and optional visual automation builder are not implemented yet.
+Project code is MIT licensed. See [third-party notices](THIRD_PARTY_NOTICES.md) for the Go binary license and the unresolved artwork provenance gate. Community contributions are welcome. The future Linux backend and optional visual automation builder are not implemented yet.
 
 ## Forking and contributing
 

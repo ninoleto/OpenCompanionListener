@@ -6,7 +6,7 @@
 Stream Deck / Loupedeck / any Companion surface
                 |
       Bitfocus Companion (module)
-       Node.js 20+ / CommonJS
+       Node.js 22.8+ (22.x) / CommonJS
                 |
    HTTP + HMAC-SHA256 over trusted LAN
            default TCP 17992
@@ -45,7 +45,7 @@ NONCE
 HEX_SHA256(raw_request_body_bytes)
 ```
 
-Compute `hex(HMAC_SHA256(pairing_key_bytes, UTF8(payload)))`, where the pairing key is exactly 32 raw bytes represented as 64 hexadecimal characters in settings. `GET` hashes an empty byte body. The server checks the source IP, method, request size (maximum 8192 bytes), signature in constant time, timestamp validity, and nonce uniqueness. Replay cache items are retained for a short window.
+Compute `hex(HMAC_SHA256(pairing_key_bytes, UTF8(payload)))`, where the pairing key is exactly 32 raw bytes represented as 64 hexadecimal characters in settings. `GET` hashes an empty byte body. The server checks the source IP, method, request size (maximum 8192 bytes), signature in constant time, timestamp validity, and nonce uniqueness. Replay entries are retained for two minutes and survive settings saves and in-process restarts. Full process exit clears them; this is not persistent replay protection.
 
 This is **HTTP without TLS**. The signature is not encryption. Only deploy on a trusted LAN or private overlay with firewall access restricted to the Companion host.
 
@@ -72,12 +72,14 @@ All commands are JSON with a `type` field. Only listed fields are accepted (unre
 - `num_lock` modes: `toggle`, `on`, `off`.
 - Mouse button: `left`, `right`, `middle`.
 - URL: absolute `http`/`https` only, maximum 2048 characters.
-- File path: nonempty, maximum 1024 bytes, no CR/LF/NUL; arguments maximum 1024 bytes.
+- File path: nonempty, maximum 1024 bytes, no CR/LF/NUL; arguments maximum 1024 bytes. Executable/argument launching includes interpreters and registered URI handlers; the paired host has broad user-session execution authority, not an application allowlist.
 - Key strings: `+`-separated supported key identifiers from `listener/keys.go`, max length 100. See module `src/keys.cjs` for dropdown choices.
 
 ## Windows UI, settings, and process lifetime
 
 - UI is served only on loopback `127.0.0.1:17993`; it is not the remote-control API.
+- All dashboard routes validate that exact authority and any Origin. `/ui/` requests also require `X-OCL-Local-UI: 1`; cross-site requests are rejected, including state reads.
+- Network settings, rotation and restart are serialized. A new endpoint is bound and the candidate settings persisted before activation; failed persistence closes only the prepared endpoint. Rotation persists the new key before installing it in memory.
 - `OpenCompanionListener.exe` starts quietly and places a native icon in the tray; browser dashboard opens only when requested.
 - Tray: Open GUI, Restart Listener, Exit. Restart rebinding affects API port while leaving local UI/tray alive.
 - Per-user HKCU Run startup is opt-in; launching at Windows sign-in does not create a Windows service.
@@ -92,6 +94,9 @@ All commands are JSON with a `type` field. Only listed fields are accepted (unre
 - `src/presets.cjs`: 38 optional presets, never automatically mapped to the user's grid.
 - `src/upgrades.cjs`: action migration from previous module versions. Must remain compatible with old stored config until explicitly deprecated and documented.
 - `@companion-module/base` is the only external runtime module dependency.
+- Base 1.13.6 is pinned and its transitive dependencies are locked. API 1.13 requires at least Companion 4.1 per the upstream matrix; actual host smoke testing remains required. See [installation](COMPANION-INSTALL.md).
+- HTTP responses are capped at 8192 bytes; aborts/errors reject requests and a 3.5-second overall deadline also bounds continuously streaming peers and socket queueing.
+- Success logs say `OS accepted`: SendInput/ShellExecute acceptance is not evidence that a launched GUI initialized or completed a task. No child-process completion is tracked.
 
 ## Future Linux (not implemented)
 

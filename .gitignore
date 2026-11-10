@@ -20,6 +20,8 @@ coverage.out
 node_modules/
 .npm/
 .cache/
+dist/
+__pycache__/
 .DS_Store
 Thumbs.db
 

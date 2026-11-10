@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — v0.1.3 publication fixes (2026-11-11)
+
+- Reject foreign dashboard authorities/origins and protect pairing-state reads.
+- Preserve replay state across settings saves and in-process restarts; serialize settings updates and persist before activating new keys/network settings.
+- Preserve legacy Companion expression options; add an indexed scroll repair migration and retain one scroll action with an advanced compatibility mode.
+- Reject aborted/oversized HTTP responses and enforce an overall transport deadline.
+- Pin Companion base 1.13.6 with an npm lockfile and Node 22 requirements; validate the real installed API in CI.
+- Build deterministic local Windows, source and Companion candidate ZIPs with Go 1.27.4, source-commit metadata, SHA-256 checksums and the Go redistribution notice.
+- Correct execution-authority claims, installation/rollback instructions and status wording (`OS accepted` does not mean a task completed).
+
+Publication remains on HOLD pending manual Windows/Companion verification, artwork provenance and distribution/version decisions. Existing snapshots and published tags/assets must never be replaced. These fixes are not a shipped release.
+
 ## 0.1.3 — 2026-11-10
 
 - Start silently in the Windows notification area. Open the dashboard only from tray (or local URL); prevent a second instance from launching via the existing local-dashboard port.

@@ -1,4 +1,5 @@
-Open Companion Listener v0.1.3 — Windows x64
+DRAFT ONLY — PUBLICATION ON HOLD — DO NOT UPLOAD
+Open Companion Listener v0.1.3 publication-fix candidate — Windows x64
 
 Free, open-source Windows desktop control for Bitfocus Companion.
 
@@ -25,8 +26,8 @@ INSTALLATION — WINDOWS
 
 INSTALLATION — BITFOCUS COMPANION
 1. Copy companion-module-community-openlistener into Companion's developer/extra module directory.
-2. On the Companion host, in that module folder: npm install --omit=dev
-3. Verify: node --test src/*.test.cjs
+2. In a staging copy using Node 22.x: npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+3. Verify: npm run validate, then npm test. Stop on failure. Requires Companion 4.1+ API 1.13/node22 support; actual host certification is pending.
 4. Restart Companion when safe, then add or update the Open Companion Listener connection using the Windows PC IP, port 17992, and pairing key.
 5. Drag optional presets onto buttons from Companion's Presets tab.
 
@@ -34,8 +35,8 @@ UPGRADING FROM 0.1.2
 Back up your existing Companion config and module directory first. The updated module includes an action migration script to translate prior shortcut/scroll options. Existing listener network settings and pairing key remain unchanged.
 
 NOTES
-Windows x64 only. The executable is not code-signed. Keyboard/mouse injection is subject to Windows focus/security restrictions. Signed API requests are not encrypted; use a trusted network and firewall.
+Windows x64 only. The executable is not code-signed. Keyboard/mouse injection is subject to Windows focus/security restrictions. Signed API requests are not encrypted; use a trusted network and firewall. Executable/argument launching includes interpreters: pairing grants desktop-user execution authority.
 
-MIT License. Complete Go/JavaScript source and documentation are included.
+Project code: MIT License. Complete Go/JavaScript source and documentation are included in the Windows/source archives; the module archive contains module source plus its lockfile (dependencies installed separately). Go notices are included. Artwork redistribution provenance is still a release gate.
 
-Verification: Automated tests and Windows cross-build passed. Windows startup and Companion migration still require desktop verification before broad deployment.
+See HANDOFF.md and docs/AUDIT-v0.1.3.md for current exact evidence. Manual Windows and Companion smoke testing, artwork permission, distribution/version status and actual repository/security-reporting URLs must be resolved before publication. Never replace an already published v0.1.3 asset or tag; use a new patch release if needed.

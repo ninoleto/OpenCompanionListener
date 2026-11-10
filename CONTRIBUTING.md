@@ -11,7 +11,7 @@ Read `AGENTS.md`, `HANDOFF.md`, `SECURITY.md`, and `docs/ARCHITECTURE.md`. Windo
 1. Fork the repository and create a descriptive feature or fix branch.
 2. Open an issue to discuss broad protocol, auth, input, or security changes before implementing them.
 3. Make small, reviewable commits with regression tests. Preserve Companion action IDs and old saved buttons; add migrations if an action schema changes.
-4. Run `go test -race ./...` and `go vet ./...` in `listener/`; run `node --test src/*.test.cjs` in the Companion module folder.
+4. Use the toolchain and PowerShell/Bash commands in `docs/RELEASING.md`. Run `go test -race ./...` and `go vet ./...` in `listener/`; run `npm ci --omit=dev --ignore-scripts --no-audit --no-fund`, `npm run validate`, then `npm test` in the module folder. The real-library migration tests require installed dependencies.
 5. Cross-build the Windows executable and, where feasible, run the `SMOKE_TEST.md` checklist on Windows and an actual Companion host.
 6. In your PR describe what changed, why, tests run, screenshots for UI work, compatibility implications, and known gaps.
 
@@ -21,7 +21,7 @@ Include: listener version, Windows edition/build, Companion version and module v
 
 ## Code review priorities
 
-- Respect Windows input focus/UIPI boundaries; no elevation bypasses or unrestricted remote shell execution.
+- Respect Windows input focus/UIPI boundaries; no elevation bypasses or new shell endpoints. Existing executable/argument launching gives the authenticated peer desktop-user execution authority; it is not a restricted launcher.
 - Keep dependencies light and startup latency low; benchmark before claiming performance improvements.
 - Add explicit tests for authentication, replay rejection, input boundaries, old config migration and user-selected presets.
 - Prefer intuitive dropdown/checkbox/slider actions to typed syntax while retaining supported old action IDs.

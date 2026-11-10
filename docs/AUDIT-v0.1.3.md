@@ -1,5 +1,40 @@
 # v0.1.3 pre-publication audit — 2026-11-11
 
+## Publication-fix continuation (current status)
+
+The initial audit below is retained as historical defect evidence. Its statements
+that no implementation changed apply to that earlier session only. Corrections
+now exist on `fix/v0.1.3-publication`, continuing the prior session's uncommitted
+work. Nothing has been published or installed into a live Companion instance.
+
+| Finding | Current disposition |
+| --- | --- |
+| A01 | Fixed: exact dashboard authority/Origin and state-read header guards; regression coverage. |
+| A02 | Compiler pinned to Go 1.27.4 in CI/tooling. Source scan clean; final candidate binary verification follows the packaging commit. Original EXE remains untouched. |
+| A03 | Fixed in source: preserve expression wrappers, retain migration index 0, additive index 1 repairs stranded scroll actions. Real base 1.13.6 upgrade processor tests pass. Actual Companion import/export remains a gate; already-lost expressions require the backup export. |
+| A04 | Fixed for settings saves and in-process restart. Full process exit still clears the memory-only cache; limitation documented. |
+| A05 | Fixed: serialize updates, bind/persist before activation, clean temporary files; failed rotation, network save, endpoint bind/rename, and concurrent saves covered. |
+| A06 | Fixed: aborted/error/oversized responses reject once, 3.5-second overall deadline bounds trickling peers. Real loopback HTTP tests pass. |
+| A07 | Corrected authority claims in README, SECURITY, architecture and contributor/agent guidance; existing launching behavior preserved. Success text now says OS accepted. |
+| A08 | Go binary redistribution notice included and verified against toolchain. Module ZIP does not bundle dependencies. Artwork authorship/permission remains unresolved and blocks publication. |
+| A09 | Base 1.13.6 pinned with lockfile; Node 22.x aligned; clean install and installed-library validation added to CI. Companion 4.1 is the upstream API minimum, not completed host certification. |
+| A10 | Deterministic three-archive builder/checksums and guarded install/rollback documentation added. Final archive verification follows the packaging commit. Manual desktop/Companion, antivirus and owner publication gates remain. |
+
+Fresh verification before packaging: Windows/amd64 Go 1.27.4 race tests pass
+15 top-level tests plus 20 key subtests; both vet modes pass. Node 22.23.4 clean
+install (17 dependencies), real base manifest validation and 28/28 Node tests
+pass. npm audit reports zero advisories. govulncheck v1.9.0 source scan reports no
+vulnerabilities (database updated 2026-11-05). See HANDOFF.md for the current
+session and the release instructions for exact commands. Initial Node sandbox
+workers failed with EPERM before running; the authorized rerun passed.
+
+**Decision remains HOLD.** Candidate packaging does not establish artwork rights,
+actual Windows/Companion behavior, an antivirus result, owner repository links or
+whether v0.1.3 has already been distributed. Local candidate filenames preserve
+the original snapshots and avoid implying a replacement release.
+
+## Original audit (historical)
+
 **Decision: HOLD publication.** The supplied source builds and its existing tests pass, but the audit reproduced security and compatibility defects and found release-material gaps. No application or Companion implementation was changed. Nothing was published, tagged, uploaded, or installed into a live Companion instance.
 
 ## Scope and source baseline

@@ -1,5 +1,22 @@
 # Development handoff — Open Companion Listener
 
+## 2026-11-11 final-validation preparation — awaiting user tray exit
+
+This section is the latest status. The owner requires preservation of the working
+Windows installation, ZORIN module, settings and paired devices, and explicitly
+withholds permission to publish. The candidate application/module is unchanged.
+
+- **Branch/commit:** `fix/v0.1.3-publication`, candidate source `58b9f14821326cae0f6d92a9f1a379babff14c69`; this documentation-only follow-up does not rebuild or replace its archives.
+- **Objective:** identify the port 17993 owner without stopping it, guide the owner through a tray exit, run the existing isolated executable smoke tool afterward, and prepare ZORIN/manual validation procedures.
+- **Confirmed:** read-only Windows process and netstat inspection identifies the existing installed `OpenCompanionListener.exe` as the owner of port 17993 connections. The process remains running at the last check. Initial CIM inspection saw no LISTENING socket; later netstat inspection saw established/closing sockets owned by that process. Local PID/path details were given to the owner, not copied into public release docs. No termination or dashboard mutation was attempted.
+- **Tests/checks this session:** all existing candidate SHA-256 checksums match; the executable selected for the smoke tool is byte-identical to the EXE in the candidate Windows ZIP and matches BUILD-INFO.json (`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`). ZORIN runbook Bash examples pass `bash --noprofile --norc -n` (exit 0, syntax only, no commands executed). `git diff --check` passes. Sandbox restrictions on Windows process metadata and Git Bash startup were resolved with permitted read-only/syntax-check reruns.
+- **Not performed:** executable smoke test in this session (waiting for the user's tray exit confirmation), ZORIN access/install/configuration import, desktop input or visual tray tests, startup registry writes, sign-in tests, real-host migrations, paired-device changes, antivirus rescan or publication. Previous Go/Node results below remain historical verification; they were not rerun for documentation-only edits.
+- **Files changed:** `docs/ZORIN-VALIDATION.md` provides private backups, checksum/staging/locked npm install, isolated migration checks, a future separate-module-parent activation and matching-data rollback. `docs/COMPANION-INSTALL.md` links it. `SMOKE_TEST.md` now details expected observations and all 38 presets. This handoff and the audit record confirmed preparation only.
+- **Isolation/rollback:** smoke tool remains unchanged and uses temporary LOCALAPPDATA, a random test key and loopback API port. A local ignored wrapper is prepared to compare the original installed EXE, current-user settings and startup value before/after the test; it has not run. No production files, registry values or ZORIN modules were changed. Existing candidate archives and rollback snapshots remain intact.
+- **Remaining gates:** actual executable smoke results, Windows/Companion manual checklist, artwork rights, successful antivirus verification, owner distribution/version/repository decisions, and explicit publication approval. LOCALAPPDATA isolation does not isolate HKCU startup: manual startup tests require a separate Windows account/VM.
+
+**Single next safe action:** after the owner exits the working listener through its tray and confirms, recheck the process/port and run `tools/smoke_listener.cjs` against the checksum-verified candidate, then replace this pending status with the observed results.
+
 ## 2026-11-11 publication-fix continuation — local candidates only
 
 This section supersedes the audit-only and historical next actions below.

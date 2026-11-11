@@ -1,5 +1,36 @@
 # v0.1.3 pre-publication audit — 2026-11-11
 
+## Final-validation preparation (latest session)
+
+Candidate source remains `58b9f14821326cae0f6d92a9f1a379babff14c69` on
+`fix/v0.1.3-publication`. No application, module, built archive, working
+installation, live settings or paired device was changed in this follow-up.
+Publication still requires the owner's explicit approval.
+
+- Read-only Windows inspection identified the installed `OpenCompanionListener.exe`
+  as the owner of port 17993 connections. The first permitted CIM query found no
+  LISTENING entry, while netstat subsequently showed established/closing sockets
+  owned by the still-running process. The owner received its PID/path and tray
+  Exit instructions. No automatic termination or live-dashboard request occurred.
+- Existing candidate checksums and the selected smoke EXE were reverified against
+  the archive and BUILD-INFO.json: PASS. The source commit and executable hash
+  are unchanged from the verified package below.
+- The new [ZORIN runbook](ZORIN-VALIDATION.md) prepares backup, staged `npm ci`,
+  real-base validation, isolated import/migration tests, future activation using
+  a separate module parent and configuration-aware rollback. Its Bash examples
+  pass syntax checking (exit 0); they have **not** been executed on ZORIN.
+- [SMOKE_TEST.md](../SMOKE_TEST.md) now includes expected tray/startup, Num Lock,
+  builder/hold/release, mouse/scroll, existing-button and all-preset observations.
+  Manual startup tests explicitly require an isolated account/VM because changing
+  LOCALAPPDATA does not isolate the HKCU startup value.
+- The executable smoke test is **pending user tray exit** in this session.
+  No candidate start/authentication/exit result is claimed yet. Existing Go/Node
+  results below were not rerun for these documentation-only changes.
+
+**Decision: HOLD.** Next: confirm the owner's tray exit, recheck process/port,
+run the existing isolated executable smoke test, and record only its observed
+results. Full manual/host checks and the other release gates remain open.
+
 ## Publication-fix continuation (current status)
 
 The initial audit below is retained as historical defect evidence. Its statements

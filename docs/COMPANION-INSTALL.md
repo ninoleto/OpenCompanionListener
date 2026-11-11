@@ -1,5 +1,10 @@
 # Companion module installation and rollback
 
+For final validation on an existing ZORIN installation, use the detailed
+[ZORIN staging/migration/rollback runbook](ZORIN-VALIDATION.md). It keeps the
+installed module intact, tests copied configuration in isolation, and describes
+a future switch to a separate module parent instead of replacing the old folder.
+
 The module targets Companion **4.1 or later with API 1.13 and the node22 runtime**.
 The [official compatibility matrix](https://bitfocus.github.io/companion-module-base/)
 lists 4.1 as the first host supporting base 1.13. This is an API minimum, not

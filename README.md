@@ -1,12 +1,20 @@
-# Open Companion Listener
+# Open Companion Listener v0.1.3
 
-**Version 0.1.3 — first public release** · Free and open source · MIT License
+## Send keystrokes and mouse commands to a Windows PC using Bitfocus Companion.
 
-Download the Windows and Companion packages from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.3). See [the audit](docs/AUDIT-v0.1.3.md), [smoke-test record](SMOKE_TEST.md), and [current handoff](HANDOFF.md) for verification and limitations. This first public release is not certified across every Windows configuration.
+Open Companion Listener is a free, open-source Windows application that receives commands from Bitfocus Companion and executes them on your computer.
 
-Open Companion Listener is a lightweight Windows desktop-control application with its **own Bitfocus Companion connection module**. Control Windows keyboard, mouse, scrolling, file and application launching from a Stream Deck, Loupedeck, or any surface supported by Companion. No subscription, cloud account, Python runtime, or license activation is required.
+Send individual keystrokes, keyboard shortcuts, mouse clicks, and scroll commands from a Stream Deck, Loupedeck, or any control surface supported by Companion.
 
-**Windows 10/11 x64** is supported. The listener runs in the Windows notification area and presents a dark configuration dashboard in your browser **only when you request it**. It does not open the dashboard when the application starts. Linux desktop control is not available in this release.
+You can also launch applications, open files, and execute scripts.
+
+The listener runs quietly in the Windows system tray. Companion can run on the same computer or another machine on your local network.
+
+No subscriptions. No cloud accounts. No license activation.
+
+Free and open source under the MIT license.
+
+**Windows 10/11 x64 · First public release.** Download the Windows listener and Companion module from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.3). See the [smoke-test record](SMOKE_TEST.md), [audit](docs/AUDIT-v0.1.3.md) and [handoff](HANDOFF.md) for verification and limitations.
 
 ## Features
 

@@ -1,43 +1,79 @@
-Open Companion Listener v0.1.3 is the **first public release**: a free, open-source Windows remote-control listener with Bitfocus Companion integration.
+# Open Companion Listener v0.1.3
 
-The native Go listener and CommonJS Companion module run locally. Normal operation requires no subscription, cloud account, Python runtime or license activation. Project code and project-generated artwork are MIT licensed; Go redistribution notices are included.
+## Send keystrokes and mouse commands to a Windows PC using Bitfocus Companion.
 
-## Features
+Open Companion Listener is a free, open-source Windows application that receives commands from Bitfocus Companion and executes them on your computer.
 
-- Keyboard shortcuts, single keys, press/hold/release and dedicated Num Lock controls.
-- Mouse buttons, relative movement and vertical/horizontal scrolling with 1–20-notch controls.
-- Open applications, files, folders and websites; Windows Settings and Control Panel selectors.
-- 38 optional drag-and-drop Companion presets.
-- Silent tray startup with Open GUI, Restart Listener and Exit; optional per-user sign-in startup.
-- HMAC-SHA256 authentication, timestamps, nonce replay checks and trusted Companion peer IP.
+Send individual keystrokes, keyboard shortcuts, mouse clicks, and scroll commands from a Stream Deck, Loupedeck, or any control surface supported by Companion.
 
-The release includes the completed dashboard authority, transactional settings, replay-lifecycle, Companion migration and bounded HTTP transport corrections. Publication preparation introduces no application behavior changes.
+You can also launch applications, open files, and execute scripts.
 
-## Downloads and checksums
+The listener runs quietly in the Windows system tray. Companion can run on the same computer or another machine on your local network.
 
-- `OpenCompanionListener-v0.1.3-Windows-x64.zip` — EXE, complete source/docs and licenses.
-- `OpenCompanionListener-v0.1.3-Companion-Module.zip` — module source, tests, manifest, lockfile and installation guide; dependencies installed separately.
-- `OpenCompanionListener-v0.1.3-Source.zip` — complete release source and documentation.
-- `BUILD-INFO.json` — source commit, toolchain, build flags and source/EXE hashes.
-- `SHA256SUMS.txt` — SHA-256 checksums for the four files above.
+No subscriptions. No cloud accounts. No license activation.
 
-In PowerShell, use `Get-FileHash -Algorithm SHA256 .\OpenCompanionListener-v0.1.3-Windows-x64.zip` and compare with the checksum file. On Linux, download all four listed files and run `sha256sum --check SHA256SUMS.txt`.
+Free and open source under the MIT license.
 
-The Windows EXE must have SHA-256:
-`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`
+## Keyboard controls
 
-## Windows installation
+Send individual keys, including F1–F24, numpad and navigation keys, or build shortcuts using modifier checkboxes and a key dropdown. Actions support press, hold and release. Num Lock has separate Toggle, ON and OFF controls.
 
-1. Verify the Windows ZIP and extract it to a permanent folder. Run `OpenCompanionListener.exe` as your normal Windows user.
-2. Find the notification-area icon, then double-click it or choose **Open GUI**. The local dashboard is `http://127.0.0.1:17993/`; it does not open automatically.
-3. Configure the listen address, trusted Companion host IP and API port (default `17992`). Copy the private pairing key into the Companion connection.
-4. Restrict inbound TCP 17992 in Windows Firewall to that specific trusted host on your private network. Never port-forward the API or dashboard to the Internet.
-5. Optionally enable **Start with Windows** after placing the EXE in its permanent location. This is per-user sign-in startup, not a Windows service.
+## Mouse controls
 
-## Companion installation
+Send left, right or middle clicks, hold and release mouse buttons, and move the pointer relative to its current position. Scroll vertically or horizontally with a separate direction control and an adjustable amount of 1–20 notches.
 
-1. Verify and extract the module ZIP to a staging directory. Use Companion 4.1+ with API 1.13/node22 support and Node 22.8+ within the 22.x line.
-2. In `companion-module-community-openlistener`, run each command and stop on failure:
+## Additional functions
+
+Launch applications with arguments, open files, folders and URLs, or run scripts through an installed interpreter or file association. Windows Settings pages and classic Control Panel tools are available from dropdowns. Script interpreters, such as AutoHotkey, must be installed separately where needed.
+
+## 38 optional Companion presets
+
+The module includes presets for Windows shortcuts, Chrome shortcuts, common editing shortcuts, mouse scrolling and Windows Settings. Drag presets from Companion's **Presets** tab onto your buttons, or configure your own actions. Installing the module does not add buttons or change existing pages. Keyboard presets act on the currently focused window.
+
+## How the two components communicate
+
+The **Windows listener** runs on the PC receiving commands. The **Companion module** adds the actions and presets to Bitfocus Companion.
+
+When a button is pressed, the module sends an authenticated HTTP command to the listener using its IP address, API port (default `17992`) and private pairing key. The listener checks the request and trusted Companion IP before performing the action.
+
+The settings dashboard is available only on the Windows PC at `http://127.0.0.1:17993/`.
+
+## What to download
+
+For a typical setup, download the Windows ZIP, Companion module ZIP and checksum file.
+
+| File | Contents |
+| --- | --- |
+| [OpenCompanionListener-v0.1.3-Windows-x64.zip](https://github.com/ninoleto/OpenCompanionListener/releases/download/v0.1.3/OpenCompanionListener-v0.1.3-Windows-x64.zip) | Windows executable, source, documentation and licenses |
+| [OpenCompanionListener-v0.1.3-Companion-Module.zip](https://github.com/ninoleto/OpenCompanionListener/releases/download/v0.1.3/OpenCompanionListener-v0.1.3-Companion-Module.zip) | Companion module, tests, dependency lockfile and installation guide |
+| [OpenCompanionListener-v0.1.3-Source.zip](https://github.com/ninoleto/OpenCompanionListener/releases/download/v0.1.3/OpenCompanionListener-v0.1.3-Source.zip) | Optional complete source archive |
+| [BUILD-INFO.json](https://github.com/ninoleto/OpenCompanionListener/releases/download/v0.1.3/BUILD-INFO.json) | Source commit, build details and file hashes |
+| [SHA256SUMS.txt](https://github.com/ninoleto/OpenCompanionListener/releases/download/v0.1.3/SHA256SUMS.txt) | Checksums for verifying the downloads |
+
+In PowerShell, compare the output of this command with the matching entry in `SHA256SUMS.txt`:
+
+```powershell
+Get-FileHash -Algorithm SHA256 .\OpenCompanionListener-v0.1.3-Windows-x64.zip
+```
+
+Verify the Companion ZIP the same way using its filename.
+
+## Install the Windows listener
+
+1. On Windows 10/11 x64, extract the verified Windows ZIP to a permanent folder. Run `OpenCompanionListener.exe` as your normal Windows user.
+2. Find its system tray icon. Double-click it or choose **Open GUI** from the right-click menu. The browser dashboard does not open automatically.
+3. In Settings, choose the listen address, set the trusted Companion computer's IP and API port, then save. Copy the pairing key into the Companion connection when configuring it below.
+4. For connections from another computer, allow inbound TCP `17992` (or your chosen API port) in Windows Firewall **only from that Companion computer**.
+5. Optionally enable **Start with Windows** after placing the EXE in its permanent folder. To stop the listener, choose **Exit** from its tray menu.
+
+The Windows EXE does not require Node.js or Python.
+
+## Install the Companion module
+
+Use **Companion 4.1 or later with API 1.13 and the node22 runtime**, and **Node.js 22.8 or later within the 22.x line** for module installation. This is the API minimum, not certification of every Companion version.
+
+1. Extract the verified Companion ZIP to a staging folder. Open a terminal inside `companion-module-community-openlistener`.
+2. Confirm `node --version` reports a supported 22.x version. Run these commands, stopping if any fails:
 
    ```text
    npm ci --omit=dev --ignore-scripts --no-audit --no-fund
@@ -45,19 +81,31 @@ The Windows EXE must have SHA-256:
    npm test
    ```
 
-3. Copy that prepared folder into the developer/extra module **parent** directory configured in Companion. This ZIP is not an in-app upload package. Installation requires npm registry access; normal operation remains local.
-4. Restart Companion when safe. Add the **Open Companion Listener** connection using the Windows PC's IP, port and pairing key. Add presets only if desired.
+3. Copy the prepared `companion-module-community-openlistener` folder into the developer/extra module **parent directory** configured in Companion. This is not an in-app ZIP upload package.
+4. Restart Companion when safe. Add an **Open Companion Listener** connection and enter the Windows PC's IP, API port and pairing key.
+5. Create buttons using the module's actions, or drag in optional presets.
 
-For existing installations, export the Companion configuration and back up the old module before upgrading. Restore both the module and matching configuration export for rollback. See the [installation and rollback guide](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/docs/COMPANION-INSTALL.md).
+Dependencies require npm registry access during installation; normal operation is local. Before upgrading an existing installation, export the Companion configuration and back up the module. See the [installation and rollback guide](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/docs/COMPANION-INSTALL.md).
 
-## Verification and known limitations
+## Basic security
 
-- Automated Windows Go race tests and both vet modes passed. The module's 28 tests and installed-base manifest validation passed; npm audit reported zero advisories.
-- The corrected EXE passed an isolated smoke test covering startup, dashboard guards, signed status, replay rejection after save/restart, duplicate-instance exit, key rotation and shutdown. Microsoft Defender completed a scan reporting no threats (exit 0). Neither result guarantees safety or universal compatibility.
-- The owner reports working Num Lock, keyboard/mouse controls, DisplaySwitch.exe arguments 1–4, AutoHotkey launching, Voicemeeter recorder/VBAN feedback workflows, and corrected module installation on ZORIN with 28 passing tests. These are scoped owner observations; detailed historical test-time binary attribution has not been independently established.
-- Windows 10/11 x64 is the desktop target. Linux desktop input is not implemented; Companion may run on a separate supported host. Not every feature or Windows configuration has been tested. Detailed tray/startup, all-preset, interruption and real-host migration/rollback coverage remains incomplete.
-- The EXE is unsigned. Windows focus, integrity, lock-screen and session boundaries apply. OS acceptance does not mean a launched task has finished.
-- HTTP requests are authenticated, **not encrypted**. Pairing grants desktop-user execution authority, including executable arguments and interpreters. Use a trusted LAN/private overlay and firewall restrictions; do not run the listener as Administrator.
-- Replay state survives settings saves and in-process restarts but is memory-only across full process exits. If an old module already destroyed an expression during migration, recover it from a pre-upgrade configuration export.
+Use a trusted local network or private network connection. HTTP commands are **authenticated but not encrypted**. Keep the pairing key private, restrict the API port with Windows Firewall, and never expose the API or dashboard to the public Internet.
 
-See [SECURITY.md](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/SECURITY.md), the [smoke-test record](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/SMOKE_TEST.md), and the [audit](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/docs/AUDIT-v0.1.3.md) for scope and evidence. Report bugs through [GitHub Issues](https://github.com/ninoleto/OpenCompanionListener/issues) without sharing pairing keys or private configuration.
+A paired Companion host can send input and launch applications or scripts under your Windows account. Pair only with a computer you trust, and do not run the listener as Administrator. See [SECURITY.md](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/SECURITY.md) for details, including replay-protection limits across full process restarts.
+
+## Open-source development
+
+The [repository](https://github.com/ninoleto/OpenCompanionListener) includes the Go listener, JavaScript/CommonJS module, build tools, automated tests and [GitHub Actions](https://github.com/ninoleto/OpenCompanionListener/actions). Code and project artwork are available under the [MIT license](https://github.com/ninoleto/OpenCompanionListener/blob/main/LICENSE).
+
+To contribute, fork the repository, make a focused change and open a pull request. Start with [CONTRIBUTING.md](https://github.com/ninoleto/OpenCompanionListener/blob/main/CONTRIBUTING.md). [HANDOFF.md](https://github.com/ninoleto/OpenCompanionListener/blob/main/HANDOFF.md) records development context, verification and limitations. Contributors using AI coding agents should also read [AGENTS.md](https://github.com/ninoleto/OpenCompanionListener/blob/main/AGENTS.md) for compatibility rules and required checks.
+
+## Known limitations and support
+
+v0.1.3 is the first public release. Automated tests and GitHub Actions passed; the corrected EXE passed an isolated smoke test and a completed Defender scan with no reported threats. These checks do not establish that every feature or Windows configuration has been tested.
+
+- The listener targets Windows 10/11 x64 and runs in an interactive user session.
+- The EXE is unsigned, so Windows may show an unrecognized-publisher warning.
+- Input follows Windows focus and security restrictions; elevated or locked desktops cannot be assumed controllable.
+- Detailed tray/startup, all-preset, interrupted-input and real-host migration/rollback coverage remains incomplete. OS acceptance of a launch request does not mean the application finished its task.
+
+See the [test record](https://github.com/ninoleto/OpenCompanionListener/blob/v0.1.3/SMOKE_TEST.md) for scope. Report bugs or suggestions through [GitHub Issues](https://github.com/ninoleto/OpenCompanionListener/issues), including your Windows and Companion versions, reproduction steps and sanitized logs. Never include pairing keys or private settings.

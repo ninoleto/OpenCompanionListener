@@ -1,6 +1,24 @@
 # Development handoff — Open Companion Listener
 
-## 2026-11-11 first public release preparation — repository created (latest)
+## 2026-11-11 public description update — published and verified (latest)
+
+- **Branch/commit:** documentation branch `docs/v0.1.3-description` from public main `0f988d4eff11b20203b98ad9fd5a35308ef55e9e`. Description commit `eff5b1e8ec72cd49d756aa9f6440c2acce3eec8a` was pushed to main; this handoff-only follow-up records the completed verification. Existing development/audit branches are preserved.
+- **Objective/outcome:** describe the single primary purpose clearly: send keystrokes, shortcuts, mouse clicks and scrolling commands to a Windows PC using Bitfocus Companion. Published the owner's exact opening in the complete rewritten v0.1.3 release notes and README introduction; set the repository About text exactly as requested. Removed industry-specific positioning and promotional workflow claims from the release description.
+- **Files changed:** README.md introduction and GITHUB_RELEASE.txt (Markdown content); HANDOFF.md for this record. The README from `## Features` onward is unchanged. GitHub CLI updated the release with an identical ignored Markdown file at `.cache/v0.1.3-release-notes.md`. No application, module, tooling, CI, version, binary or asset file changed.
+- **Documentation coverage:** controls, 38 opt-in presets, listener/module communication, all five actual asset links, Windows/Companion installation, Node 22.8+ within 22.x, exact npm commands, trusted-network/security limits, MIT/source/Actions/contribution guidance, AGENTS.md, HANDOFF.md and Issues. Ordinary user instructions precede developer and AI-agent guidance.
+- **Checks completed:** `git diff --check` PASS, exit 0. Exact supplied opening and unchanged README technical remainder verified. GitHub's Markdown renderer produced the expected headings, lists, table and code blocks for both documents. All 15 release-note links returned HTTP 200. Unauthenticated public release/README content matches the local documents; actual GitHub HTML contains the correctly rendered opening, sections and install commands. About text matches exactly. An initial local verifier incorrectly required two ordered lists in the unchanged README; correcting that verifier assumption yielded PASS without changing the README's technical content.
+- **Release preservation:** annotated `v0.1.3` tag object remains `fde0d75e4bd9eb569f40f576571ff0655a145b37`, pointing to release commit `0f988d4eff11b20203b98ad9fd5a35308ef55e9e`. All five existing asset IDs, names, sizes, SHA-256 digests and creation/update timestamps match the pre-edit baseline. Release ID, title, tag, publication time, target and draft/prerelease state are unchanged. Only its description was edited. Main advances for documentation; the versioned source archives and binaries are preserved.
+- **Verification not performed:** no application tests, rebuilds, fresh antivirus scans, binary uploads or interactive desktop checks for this documentation-only change. Existing v0.1.3 test/coverage limits remain stated accurately; no new functionality or test result is claimed.
+- **Security/risks/unresolved bugs:** no new execution behavior or security boundary; pairing-key, firewall and unencrypted-HTTP guidance remains. No documentation blocker found. Private baseline/render/link evidence is ignored under `.cache/` and is not committed.
+- **Rollback:** revert only the documentation commits on main and restore the earlier About/release text from the local pre-edit snapshot if needed. Never move the v0.1.3 tag or replace its assets for a description correction.
+
+Public pages: https://github.com/ninoleto/OpenCompanionListener and
+https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.3.
+
+**Single next safe action:** review incoming GitHub Issues for documentation
+corrections while keeping the v0.1.3 release artifacts unchanged.
+
+## 2026-11-11 first public release preparation — repository created (historical)
 
 The owner explicitly authorizes repository creation, source push, annotated tag
 `v0.1.3`, and the first public release with verified assets. This supersedes the

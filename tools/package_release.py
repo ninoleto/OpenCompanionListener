@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build local candidate archives from HEAD, never from surrounding snapshots.
+"""Build reproducible archives from HEAD, never from surrounding snapshots.
 
 Requires Python 3.11+ and the Go compiler in release-toolchain.json on PATH.
 Node dependencies are installed separately with npm ci on the Companion host.
@@ -44,6 +44,7 @@ def archive(path, files):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, help='New directory under dist/ (must not exist)')
+    parser.add_argument('--release', action='store_true', help='Use final release names/metadata for an owner-authorized publication; does not upload')
     args = parser.parse_args()
     output = (ROOT / args.output).resolve()
     dist = (ROOT / 'dist').resolve()
@@ -94,7 +95,7 @@ def main():
         run('go', 'build', *flags, '-o', str(executable), '.', cwd=source_root / 'listener', env=env)
         binary = executable.read_bytes()
     info = json_bytes({
-        'status': 'LOCAL CANDIDATE - NOT APPROVED FOR PUBLICATION',
+        'status': 'RELEASE PACKAGE - OWNER AUTHORIZED' if args.release else 'LOCAL CANDIDATE - NOT APPROVED FOR PUBLICATION',
         'version': version, 'sourceCommit': commit, 'toolchain': config,
         'target': 'windows/amd64', 'goamd64': 'v1', 'cgo': False, 'goFlags': flags,
         'exeSHA256': digest(binary), 'moduleDependenciesBundled': False,
@@ -102,7 +103,7 @@ def main():
         'sourceFilesSHA256': {name: digest(data) for name, data in sorted(files.items())},
     })
     output.mkdir()
-    prefix = f'OpenCompanionListener-v{version}-candidate'
+    prefix = f'OpenCompanionListener-v{version}' + ('' if args.release else '-candidate')
     # Windows archive includes complete source/docs so all local links resolve.
     archive(output / (prefix + '-Windows-x64.zip'), {
         **files, 'OpenCompanionListener.exe': binary, 'BUILD-INFO.json': info,

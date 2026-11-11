@@ -1,6 +1,163 @@
 # v0.1.3 pre-publication audit — 2026-11-11
 
-## Final validation — limited executable smoke PASS (latest session)
+## First public release preparation — repository created (latest)
+
+The owner explicitly authorizes creating the public repository and publishing
+the frozen corrected v0.1.3 with its documented limitations. Earlier 404-based
+stops and missing-permission claims are historical. GitHub CLI 2.103.3 was
+installed from the official winget package (installer checksum verified), and
+both authentication status and the API identify the account as `ninoleto`.
+After the authenticated repository lookup returned 404, the agent created
+`https://github.com/ninoleto/OpenCompanionListener` as a public, empty repository
+with Issues enabled and the owner-specified description, and connected origin.
+No README, license or gitignore was generated remotely; no unrelated repository
+was overwritten.
+
+Publication changes are limited to reviewed documentation, repository/bugs URLs
+in the Companion manifest, and an opt-in packaging `--release` label/naming
+option. Listener source/UI, module action/migration/transport code, dependencies
+and artwork are unchanged. Final packages must record the new source commit and
+reproduce EXE SHA-256
+`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`.
+
+Fresh Windows Go 1.27.4 race tests passed all 15 top-level tests and 20 key
+subtests; both CGO=1 and Windows/amd64 CGO=0 vet modes passed. Node 22.23.4 clean
+install (17 packages), installed-base 1.13.6 manifest validation and all 28 tests
+passed. npm audit reported zero advisories; fresh govulncheck source and corrected
+EXE scans reported no vulnerabilities. All checks exited 0. A targeted scan of
+the tracked source and 96 historical blobs found no common secret/personal-path
+or private IPv4 patterns; this is not proof that every possible secret is absent.
+No private settings, node_modules, caches, local binaries or snapshots are staged.
+
+The owner approves publication without claiming every Windows configuration or
+manual case has been tested. The scoped evidence and limitations below remain
+accurate. No missing manual observation is converted to a PASS. At this source
+checkpoint final committed-source package reproduction, public upload and
+independent downloaded-asset verification are still pending; BUILD-INFO.json
+and the GitHub Release provide the exact published provenance when completed.
+
+## Publication preparation — artwork and Defender resolved; repository inaccessible (historical)
+
+The owner authorizes the first public v0.1.3 release without functionality
+changes. Earlier statements that publication permission or artwork rights are
+missing are historical. The inspected branch remains `fix/v0.1.3-publication`
+at `f11916317b741116ee8d52aece70f1eaf00e68bc`; this follow-up changes only
+documentation. Existing packages still identify source commit
+`58b9f14821326cae0f6d92a9f1a379babff14c69` and have not been replaced.
+
+### Artwork provenance and package identity
+
+The owner states that the icon was generated specifically for this project
+during development using programmatically drawn graphics, not copied from a
+third-party product, and directs inclusion under the project MIT license.
+THIRD_PARTY_NOTICES.md records that attribution and the exact hashes. The
+original drawing script was not found; the provenance statement rests on the
+owner's confirmation, not a claim of independent authorship research.
+
+Read-only comparison established that the ICO, PNG and derived resource match
+the original project snapshot, original source ZIP, current checkout and
+corrected Windows/source ZIPs byte-for-byte. The PNG is identical to the ICO's
+128-pixel image. All seven ICO images were visually inspected; they show the
+same project graphic at different sizes. Parsing the corrected Windows PE
+resources confirmed that its seven icon images and group match the ICO, and
+the dashboard PNG bytes are embedded in that EXE. Regenerating the resource in
+an ignored, isolated directory reproduced the committed resource byte-for-byte.
+The tracked artwork inventory contains only these three files; no unidentified
+additional artwork was found. **A08's artwork provenance gate is resolved on
+the basis of the owner's confirmation and the artifact identity checks.**
+
+### Manual evidence and executable identity
+
+The owner reports working Num Lock, keyboard shortcuts and mouse controls,
+display switching using `DisplaySwitch.exe` arguments 1–4, AutoHotkey script
+launching, and their Voicemeeter recorder/VBAN feedback workflow. The owner also
+reports corrected Companion module installation on ZORIN with 28 passing tests.
+These reports are recorded as owner observations; the agent did not perform
+the interactive tests, access ZORIN or independently collect its module hashes,
+logs or Companion version. No new built-in Voicemeeter integration is claimed.
+
+Read-only Windows process inspection found the running listener in the
+extracted corrected candidate directory. Its SHA-256 is
+`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`, matching
+BUILD-INFO.json, the Windows ZIP and the earlier successful isolated smoke EXE.
+The preserved original installed v0.1.3 EXE instead hashes to
+`d9a346c96849c557cb2f75870dce34c68e157a9b02813426b6ddcef88fc21ff1`.
+The currently running build is therefore confirmed as corrected. The owner
+has been asked to identify the executable used for the manual tests; current
+process identity alone cannot establish historical test-time identity.
+
+SMOKE_TEST.md records the partial results without marking its more detailed
+procedures passed. Visual tray/recovery, sign-in startup, exact hold/release and
+interruption cases, all presets, real-host migration round trips and rollback,
+and Windows 10/11 configuration coverage remain incompletely verified.
+The limited automated smoke PASS below remains valid for the unchanged EXE.
+
+### Completed Microsoft Defender scan
+
+On 2026-11-11 the native x64 MpCmdRun from platform `4.18.26100.4-0` ran
+`-Scan -ScanType 3 -File <corrected-exe> -DisableRemediation -ReturnHR` against
+the hash above. It printed `Scan finished` and `found no threats`, with
+HRESULT/exit **0**. It did not report a skipped file. The EXE hash was unchanged
+afterward. This is a completed scan and supersedes the earlier failed/skipped
+attempts for this exact candidate EXE.
+
+Read-only status: product `4.18.26100.4`, engine `1.1.26100.4`, signatures
+`1.463.243.0`, signature update 2026-11-11 09:41:12 UTC, signatures not out of
+date, normal running mode, antivirus and real-time protection enabled. The
+first status query was sandbox-denied after the successful scan; an authorized
+read-only query succeeded. The scan was not rerun unnecessarily. Remediation
+was disabled to preserve the candidate. This is a point-in-time result for one
+EXE, not proof of safety or a scan of every module dependency. Raw output and
+status are local-only under `.cache/evidence/publication-defender*`.
+
+### Checksums and source provenance
+
+All four SHA256SUMS entries pass. All three ZIPs pass CRC, entry uniqueness,
+path-safety, source-content and private/generated-path exclusion checks. The
+Windows ZIP EXE equals the smoke/scanned copy. All 62 source hashes match
+`git archive` of the source commit recorded in BUILD-INFO.json; module files
+match the same manifest. No settings, node_modules, cache or Git metadata is
+present in the checked archive paths.
+
+The initial local verification probe compared raw Git blobs and stopped at
+`.gitattributes`. Investigation confirmed Git archive's local
+`core.autocrlf=true` conversion in six files: `.gitattributes`, `.gitignore`,
+`LICENSE`, module `.gitignore`, module `LICENSE`, and `listener/go.mod`.
+Their archived bytes differ from Git blobs only by CRLF/LF conversion. Comparing
+against `git archive`, the actual packaging input, passes all 62 hashes. The
+release instructions now correct the earlier blanket canonical-LF claim;
+cross-host archive identity has not been established. No packaging or product
+code was changed to hide this difference.
+
+| Existing candidate file | Verified SHA-256 |
+| --- | --- |
+| `OpenCompanionListener-v0.1.3-candidate-Windows-x64.zip` | `06bfc307d8a8c47311c6007f8f98763b0640eb4c4144ab64e556c3a7d9499544` |
+| `OpenCompanionListener-v0.1.3-candidate-Companion-Module.zip` | `3703ef8d5a0e8246896f7c6e47c4a1700db3bded9f6f80884e673fbf733c5059` |
+| `OpenCompanionListener-v0.1.3-candidate-Source.zip` | `36f809cbe1d6b92305ec980aa25246b6016b83b8d1c89d8a48c5846d07347698` |
+| `BUILD-INFO.json` | `bfac110fbbc345bad4aea3aa23d54cdd9eee3f15ad236b5a83b647a2618c06a1` |
+
+Existing candidates predate the latest documentation. Once access and remaining
+verification are resolved, commit the reviewed documentation and repackage from
+that final source commit before publication. Preserve existing candidate files.
+
+### GitHub access — publication stopped
+
+The initial sandboxed Git request could not connect through the restricted
+proxy. A permitted network-enabled read-only retry reached GitHub:
+`git ls-remote --symref https://github.com/ninoleto/OpenCompanionListener.git`
+reported `Repository not found` (exit 128). The unauthenticated repository REST
+endpoint returned **HTTP 404 Not Found**. This establishes that the destination
+is not accessible with the available access; it does not distinguish an absent
+repository from an inaccessible private repository.
+
+Per the owner's instruction, no repository creation, push, tag, release or
+upload was attempted. **The immediate blocker is repository access.** The
+owner must create the exact repository if absent, or provide authenticated
+access to the existing private repository. No release URL, published commit,
+uploaded assets, independent download/install or remote checksum comparison
+exists from this session. Remaining manual evidence is explicitly scoped above.
+
+## Final validation — limited executable smoke PASS (historical session)
 
 Candidate source remains `58b9f14821326cae0f6d92a9f1a379babff14c69` on
 `fix/v0.1.3-publication`. No application, module, built archive, working

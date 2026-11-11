@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — v0.1.3 publication fixes (2026-11-11)
+## 0.1.3 — first public release (2026-11-11)
 
 - Reject foreign dashboard authorities/origins and protect pairing-state reads.
 - Preserve replay state across settings saves and in-process restarts; serialize settings updates and persist before activating new keys/network settings.
@@ -10,9 +10,9 @@
 - Build deterministic local Windows, source and Companion candidate ZIPs with Go 1.27.4, source-commit metadata, SHA-256 checksums and the Go redistribution notice.
 - Correct execution-authority claims, installation/rollback instructions and status wording (`OS accepted` does not mean a task completed).
 
-Publication remains on HOLD pending manual Windows/Companion verification, artwork provenance and distribution/version decisions. Existing snapshots and published tags/assets must never be replaced. These fixes are not a shipped release.
+The first public release incorporates these previously completed corrections; publication preparation adds documentation, repository links and final package labeling only. The corrected EXE passed the isolated automated smoke test and a completed Defender scan reporting no threats. Owner-reported working functions and ZORIN module installation are recorded separately from untested cases in SMOKE_TEST.md. Artwork provenance and MIT inclusion are documented. No claim of complete Windows/Companion configuration coverage is made. Preserve existing snapshots and never replace published tags/assets.
 
-## 0.1.3 — 2026-11-10
+## 0.1.3 development snapshot — 2026-11-10 (before first public release)
 
 - Start silently in the Windows notification area. Open the dashboard only from tray (or local URL); prevent a second instance from launching via the existing local-dashboard port.
 - Add **Start with Windows** toggle for the current user's Windows Run entry. No administrator privileges or background service required.
@@ -24,7 +24,7 @@ Publication remains on HOLD pending manual Windows/Companion verification, artwo
 
 **Verification:** Cross-compiled Windows x64 EXE; Go tests/race checks/static analysis and Companion module tests passed. Windows tray/startup behavior and upgrade migration require a real-user smoke test before public deployment.
 
-## 0.1.2 — 2026-11-10
+## 0.1.2 development snapshot — 2026-11-10
 
 - Working independent listener/module baseline with native input, keyboard and mouse actions, file and URL launching, 20-step scroll limit and dedicated Num Lock control.
 - Added native tray, Windows utilities dropdowns, scroll slider and first shortcut builder.

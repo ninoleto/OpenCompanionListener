@@ -29,6 +29,6 @@
     "launch",
     "windows"
   ],
-  "repository": "",
-  "bugs": ""
+  "repository": "https://github.com/ninoleto/OpenCompanionListener",
+  "bugs": "https://github.com/ninoleto/OpenCompanionListener/issues"
 }

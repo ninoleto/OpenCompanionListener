@@ -28,9 +28,26 @@ builder deliberately does not create that kind of bundle.
 
 ## Artwork
 
-`OpenCompanionListener.ico`, `listener/ui/icon.png`, and the derived
-`listener/icon_windows_amd64.syso` came from the supplied v0.1.3 snapshot.
-The resource generator is included in `tools/generate_icon_resource.py`.
-Original artwork authorship and permission to redistribute remain unconfirmed.
-**Publication remains on hold until the owner records the origin and rights.**
-No author or license grant for the artwork is inferred from its presence here.
+The owner confirmed on 2026-11-11 that the application icon was created
+specifically for this project during development using programmatically drawn
+graphics, and was not copied from a third-party product. At the owner's
+direction, the project artwork in `OpenCompanionListener.ico`,
+`listener/ui/icon.png`, and the derived `listener/icon_windows_amd64.syso` is
+included under the project's MIT license and contributor copyright notice in
+`LICENSE`. This provenance statement is based on the owner's confirmation;
+the original drawing script was not found in the reviewed source.
+
+Verification on 2026-11-11 established that these files are byte-identical
+across the original project snapshot, supplied source ZIP, current checkout,
+and corrected candidate Windows/source ZIPs. The dashboard PNG is exactly the
+ICO's 128-pixel image. All seven icon images and the icon group embedded in the
+corrected EXE match the ICO. Running `tools/generate_icon_resource.py` in an
+isolated directory reproduced the checked-in resource byte-for-byte. The
+tracked artwork inventory contains these three files; no additional artwork
+was identified. See `docs/AUDIT-v0.1.3.md` for package and executable evidence.
+
+| Project artwork | SHA-256 |
+| --- | --- |
+| `OpenCompanionListener.ico` | `7b2b5a21fa9921180875ee6b3f9a8d8a30a2672ccce5506cfbc0a1c5d2a578dd` |
+| `listener/ui/icon.png` | `fe9f9b869c00d1493010c033d0f000b622124eb3108cd7f3ebc6e8547d801c50` |
+| `listener/icon_windows_amd64.syso` | `7f717b5729784f1755b12264b553525c010a45fac0969005b9dbcc6e466e68ea` |

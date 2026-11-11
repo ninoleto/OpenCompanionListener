@@ -1,5 +1,73 @@
 # Development handoff — Open Companion Listener
 
+## 2026-11-11 first public release preparation — repository created (latest)
+
+The owner explicitly authorizes repository creation, source push, annotated tag
+`v0.1.3`, and the first public release with verified assets. This supersedes the
+earlier instruction to stop at a repository 404. Documented manual testing limits
+remain limits, not passed checks; the owner approves publication of this exact
+corrected EXE without additional application changes.
+
+- **Branch/commit:** `fix/v0.1.3-publication`, preparation based on `f11916317b741116ee8d52aece70f1eaf00e68bc`. The release commit is the committed source containing this entry; final BUILD-INFO.json records its full SHA. Existing candidates from `58b9f14` remain preserved.
+- **GitHub:** installed official GitHub CLI 2.103.3 with winget, which verified its installer hash. `gh auth status` and `gh api user` confirmed authenticated account `ninoleto`. The authenticated target lookup returned 404; created public `ninoleto/OpenCompanionListener` with the requested description and Issues enabled, no generated README/license/gitignore. Verified empty repository and connected origin. No unrelated repository was changed.
+- **Objective/scope:** publish frozen corrected v0.1.3. Pending artwork/manual/Defender documentation is retained. README/changelog/install guide and release notes describe the first public release and actual testing limits. Module manifest gains only repository/bugs URLs. Packaging adds an opt-in `--release` switch for final filenames and BUILD-INFO status; build flags/content selection and default candidate mode are unchanged. No listener code, UI, action implementation, migration, transport, dependency or artwork changes.
+- **Fresh automated verification:** Windows Go 1.27.4 `go test -race -count=1 -v ./...` PASS (15 top-level tests plus 20 key subtests), exit 0. `go vet ./...` with CGO=1 and Windows/amd64 CGO=0 PASS, exit 0 each. Node 22.23.4 clean `npm ci --omit=dev --ignore-scripts --no-audit --no-fund` installed 17 packages, exit 0; installed base 1.13.6 manifest validation PASS; 28/28 module tests PASS, exit 0; npm audit zero advisories, exit 0. Fresh govulncheck source and corrected-binary checks report no vulnerabilities, exit 0 each.
+- **Privacy/source review:** tracked-file inventory and 96 historical blobs scanned for common credential patterns, personal Windows/Linux paths and private IPv4 examples: zero findings; private/generated paths excluded. This targeted scan is not proof against all possible secrets. `git diff --check` PASS. Listener and module `src/` diffs are empty. Raw evidence and helper scripts stay in ignored `.cache/`.
+- **Existing executable evidence:** required SHA-256 is `510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`. Previous isolated smoke and completed Defender no-threat scan apply only if final packaging reproduces this exact EXE. Owner-reported functions and ZORIN installation are recorded in SMOKE_TEST.md; untested detailed cases are not marked passed.
+- **Files changed for publication:** CHANGELOG.md, GITHUB_RELEASE.txt, HANDOFF.md, README.md, SMOKE_TEST.md, THIRD_PARTY_NOTICES.md, docs/AUDIT-v0.1.3.md, docs/COMPANION-INSTALL.md, docs/RELEASING.md, module companion/manifest.json and tools/package_release.py. Existing historical handoff/audit evidence is retained below.
+- **Still to verify at this checkpoint:** final committed-source builds/reproduction and extracted module checks; main/tag push, public release/upload and independent downloads. No new interactive Windows/ZORIN tests or independent desktop installation have been performed. A live listener is not stopped or reconfigured for publication.
+- **Risks/rollback:** unsigned EXE; HMAC is not encryption; full desktop-user authority; memory-only replay cache across process exits; detailed manual coverage remains incomplete. Preserve original deployments/candidates. Revert only publication metadata/tooling if necessary before release; after publishing use a new version rather than replacing tags/assets. Restore matching old EXE/module/config export for deployment rollback.
+
+**Single next safe action:** build the final committed source twice, require the
+specified EXE hash and archive checks, then publish the verified commit/assets
+under the owner's existing authorization.
+
+## 2026-11-11 continued publication preparation — GitHub access blocked (historical)
+
+The owner approves the first public v0.1.3 release and confirms project-generated
+artwork and partial working-function tests. This section supersedes earlier
+claims of missing publication permission, unknown artwork rights and missing
+successful antivirus scanning. No additional publication permission is needed.
+
+- **Branch/commit:** `fix/v0.1.3-publication`, HEAD `f11916317b741116ee8d52aece70f1eaf00e68bc`. Entry status contained the previous session's uncommitted HANDOFF.md only. This session leaves documentation edits for review; no commit, remote, tag or release was created. Existing packages identify source `58b9f14821326cae0f6d92a9f1a379babff14c69`.
+- **Objective:** resolve supported artwork/manual/antivirus evidence, verify package provenance and GitHub access, and publish only if the remaining requirements are satisfied. Application behavior remains frozen.
+- **Artwork:** owner confirms programmatically drawn project-specific graphics, not copied third-party artwork, and directs MIT inclusion. ICO/PNG/resource hashes match original snapshot/source ZIP, checkout and candidate archives. Dashboard PNG equals the ICO's 128px entry; all seven embedded EXE icon images and group match. Isolated resource regeneration is byte-identical. No additional tracked artwork was found. The original drawing script was not located; authorship provenance is owner-attested, not independently reconstructed.
+- **Manual evidence:** owner reports working Num Lock, keyboard/mouse controls, DisplaySwitch.exe arguments 1–4, AutoHotkey launching, Voicemeeter recorder/VBAN feedback workflow, and corrected ZORIN module installation with 28 passing tests. Recorded as owner reports without checking unobserved detailed test cases. Current running listener SHA-256 matches the corrected candidate and prior smoke EXE (`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`). The preserved original EXE differs. Historical manual-test executable identity was requested and remains unconfirmed; no live process/settings/module was changed.
+- **Defender:** `MpCmdRun -Scan -ScanType 3 -File <corrected-exe> -DisableRemediation -ReturnHR` completed, reported no threats, exit/HRESULT 0; no skipped-file message, EXE unchanged. Product `4.18.26100.4`, engine `1.1.26100.4`, signatures `1.463.243.0`, updated 2026-11-11 09:41:12 UTC and not out of date. A sandbox-denied status read was successfully repeated with authorized read-only access; the successful scan was not repeated. Point-in-time EXE result only, not a safety guarantee or dependency scan.
+- **Package checks:** local provenance verifier PASS, exit 0: four checksum entries; CRC/safe paths/source contents in all three ZIPs; all 62 source hashes against recorded-commit `git archive`; no private settings, dependencies or caches in checked archive paths; EXE identity, artwork and PE resource checks. The probe first failed when comparing raw Git blobs: six text files undergo CRLF conversion in Git archive under local configuration. The final checks explicitly verify those differences are only line endings and compare the actual packaging input. Corrected the documentation's canonical-LF claim; cross-host byte identity remains unverified.
+- **GitHub blocker:** after the sandbox network failure, the permitted read-only Git retry reached GitHub and returned `Repository not found` (exit 128); unauthenticated repository API returned HTTP 404. The target is absent or inaccessible with available access. Per the owner's instruction, stopped before repository creation, push, tag or release/upload. Target remains `https://github.com/ninoleto/OpenCompanionListener`.
+- **Files changed:** THIRD_PARTY_NOTICES.md, HANDOFF.md, docs/AUDIT-v0.1.3.md, SMOKE_TEST.md, docs/RELEASING.md, README.md and GITHUB_RELEASE.txt. Ignored verification script, extracted icon images and scan/provenance evidence remain under `.cache/`; they are not public source. No application/module/build-tool code, artwork or archives changed.
+- **Documentation verification:** `git diff --check` PASS, exit 0. `git diff --name-only -- listener companion-dev-modules tools` returns no changed files, exit 0. The working tree contains only the seven documentation changes listed above, including the previous handoff entry.
+- **Verification not performed:** fresh Go/Node suites or build (documentation-only session); independent ZORIN inspection; manual tests by the agent; full tray/startup, migration/rollback, all-preset, hold/interruption or Windows configuration coverage; new packages; remote CI; independent download/install or release asset comparison. Existing automated and isolated smoke results remain historical evidence for the unchanged code/EXE. Current packages omit these latest documentation edits and require final-commit repackaging before release.
+- **Security risks/unresolved bugs:** existing SECURITY.md limitations remain; no new behavior or defect fix introduced. Repository access is the immediate blocker. Manual-test-time executable attribution and detailed untested cases remain explicitly unverified. No published commit, release URL or uploaded assets resulted from this session.
+- **Rollback:** nothing deployed or published; original and candidate binaries/archives are intact. Documentation edits can be reverted independently; preserve the prior handoff entry when reviewing this session's diff.
+
+**Single next safe action:** make `ninoleto/OpenCompanionListener` accessible:
+the owner should create the repository if absent, or provide authenticated
+access if it already exists privately. Recheck access before any publication.
+
+## 2026-11-11 publication request — stopped at unresolved release gates (historical)
+
+This section supersedes earlier statements that the owner withholds publication
+permission. The owner explicitly authorizes the first public v0.1.3 release at
+`https://github.com/ninoleto/OpenCompanionListener`, with a release freeze and an
+instruction to stop and report any release-blocking discrepancy. That approval
+remains valid; the stop below concerns missing release evidence, not permission.
+
+- **Branch/commit:** `fix/v0.1.3-publication`, inspected HEAD `f11916317b741116ee8d52aece70f1eaf00e68bc`. Working tree was clean at entry. No Git remote was configured. This session adds only this uncommitted handoff entry.
+- **Objective:** verify the corrected source and existing candidates before publishing the approved first public release, without functionality changes.
+- **Review:** read AGENTS.md, this handoff, architecture, security, smoke checklist, release workflow, audit, third-party notices and release draft; reviewed recent commits and tracked-file inventory.
+- **Blocking discrepancy:** artwork authorship and redistribution permission are still explicitly unconfirmed in THIRD_PARTY_NOTICES.md and audit finding A08. The release workflow says to keep publication blocked when those rights are unknown. The audit also still lacks the required interactive Windows/Companion results and a successful antivirus result; the earlier Defender attempt skipped the file. Publication authorization does not supply those missing facts.
+- **Checks this session:** `git status --porcelain=v1` was empty at entry (exit 0). Recomputed SHA-256 for all four entries in `dist/publication-candidate/SHA256SUMS.txt`: BUILD-INFO.json and the Windows, Companion module and source ZIPs all match (exit 0). BUILD-INFO.json identifies source `58b9f14821326cae0f6d92a9f1a379babff14c69`. `git diff --name-only 58b9f14821326cae0f6d92a9f1a379babff14c69 HEAD` shows only six documentation files; no application/module changes since packaging. The existing packages therefore omit the latest validation documentation and would need repackaging from the final publication commit after the blockers are resolved.
+- **Files changed:** HANDOFF.md only. No application, module, dependency, package, settings, startup entry or live installation changed.
+- **Not performed:** fresh Go/Node tests, rebuild/repackaging, fresh antivirus scan, interactive Windows/Companion checks, GitHub authentication/remote inspection, source push, tag, release creation, upload, independent download/install or remote asset comparison. Earlier automated and limited executable smoke results remain historical evidence.
+- **Security risks/unresolved issues:** artwork redistribution rights, manual validation and antivirus evidence remain unresolved. No new code/security behavior was introduced; existing security limitations remain as documented in SECURITY.md. No published commit, release URL or uploaded assets resulted from this session.
+- **Rollback:** no release or deployment to revert; existing candidate archives and source commits are untouched. This handoff-only diff can be reverted independently.
+
+**Single next safe action:** obtain and record the bundled artwork's origin and
+redistribution permission before resuming release validation. Do not infer
+authorship, replace artwork or change application behavior during the freeze.
+
 ## 2026-11-11 final validation — limited executable smoke PASS
 
 This section is the latest status. The owner requires preservation of the working

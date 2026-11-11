@@ -1,13 +1,46 @@
 # v0.1.3 smoke test — Windows + Companion
 
-**Candidate status: not yet manually verified.** Automated regression results
-are recorded separately in HANDOFF.md; they do not check these boxes.
+**Candidate status: partial owner-reported manual verification.** Automated
+regression results are recorded separately in HANDOFF.md. The detailed checklist
+remains unchecked where its complete procedure has not been observed.
 
 On 2026-11-11 the limited executable smoke tool passed (exit 0): candidate start,
 local dashboard/authority checks, signed authentication, save/restart replay
 rejection, duplicate-instance exit, temporary-key rotation and clean shutdown.
 The installed EXE, current-user settings and startup value were unchanged.
-Visible tray behavior and all interactive checks below remain unverified.
+Visible tray behavior and the detailed interactive procedures below have not
+been independently verified by the agent.
+
+## Owner report and artifact identity — 2026-11-11
+
+The owner confirmed the following working; the agent did not repeat these
+interactive tests or inspect the ZORIN host during this session:
+
+| Owner-reported check | Reported result and scope |
+| --- | --- |
+| Num Lock | Working; individual ON/OFF/idempotence cases were not specified. |
+| Keyboard shortcuts and mouse controls | Working; no claim that all hold/release, interruption or boundary cases passed. |
+| Windows display switching | Working using `DisplaySwitch.exe` arguments 1–4 on the owner's setup. |
+| AutoHotkey scripts | Script launching working. |
+| Voicemeeter recorder and VBAN feedback | Owner's workflow working; this is not a claim of a new built-in listener integration. |
+| Corrected Companion module on ZORIN | Owner confirms installation and 28 passing tests; host logs, installed module hashes and Companion version were not independently collected. |
+
+Read-only process inspection found the currently running Windows listener in
+the extracted corrected candidate directory. Its SHA-256 is
+`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`, identical
+to the candidate Windows ZIP, BUILD-INFO.json and the EXE used for the earlier
+isolated automated smoke test. The preserved original v0.1.3 installation has
+a different hash (`d9a346c96849c557cb2f75870dce34c68e157a9b02813426b6ddcef88fc21ff1`).
+Current process identity is verified; the owner has been asked to identify the
+executable used at manual-test time. A current process hash alone does not prove
+which executable was used for every earlier test.
+
+Microsoft Defender completed a custom, non-remediating scan of the corrected
+EXE on 2026-11-11, reported no threats, and returned HRESULT/exit 0. The file was
+not skipped and its hash was unchanged. Product `4.18.26100.4`, engine
+`1.1.26100.4`, signatures `1.463.243.0` (updated 2026-11-11 09:41:12 UTC;
+Defender reports not out of date). This is a point-in-time scan of that EXE,
+not a guarantee or a scan of all dependencies. See the audit for exact evidence.
 
 Record candidate source commit and ZIP/EXE SHA-256, Windows edition/build,
 Companion version, tester and date before testing. Use an isolated test account
@@ -64,9 +97,9 @@ and exported/copied Companion configuration; never unreviewed code on live butto
 ## Release evidence
 
 - [ ] Repeat applicable desktop checks on Windows 10 x64 and Windows 11 x64; record builds and deviations.
-- [ ] Record a successful trusted antivirus scan (engine/signature versions and result). A failed scan is not a clean result.
-- [ ] Record the artwork origin and redistribution permission.
-- [ ] Confirm whether v0.1.3 has already been distributed; use a new patch version when required.
+- [x] Record a successful trusted antivirus scan: corrected EXE, Defender versions/result above; earlier failed/skipped attempts remain historical.
+- [x] Record the artwork origin and redistribution permission: owner confirmation and byte-level verification in THIRD_PARTY_NOTICES.md.
+- [x] Owner identifies v0.1.3 as the first public release; preserve earlier development snapshots and never replace a published tag or asset.
 
 ## Detailed operator checks
 

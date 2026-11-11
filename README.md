@@ -1,8 +1,8 @@
 # Open Companion Listener
 
-**Version 0.1.3 — local publication-fix candidate, publication on HOLD** · Free and open source · MIT License
+**Version 0.1.3 — first public release** · Free and open source · MIT License
 
-The preserved v0.1.3 snapshots are rollback references. New archives use `-candidate` names and are not approved releases. See [the audit](docs/AUDIT-v0.1.3.md) and [current handoff](HANDOFF.md) for evidence and remaining gates.
+Download the Windows and Companion packages from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.3). See [the audit](docs/AUDIT-v0.1.3.md), [smoke-test record](SMOKE_TEST.md), and [current handoff](HANDOFF.md) for verification and limitations. This first public release is not certified across every Windows configuration.
 
 Open Companion Listener is a lightweight Windows desktop-control application with its **own Bitfocus Companion connection module**. Control Windows keyboard, mouse, scrolling, file and application launching from a Stream Deck, Loupedeck, or any surface supported by Companion. No subscription, cloud account, Python runtime, or license activation is required.
 
@@ -26,7 +26,7 @@ Open Companion Listener is a lightweight Windows desktop-control application wit
 
 ## Windows installation
 
-1. Obtain the reviewed Windows x64 archive and verify it against its `SHA256SUMS.txt`. The local build is named `OpenCompanionListener-v0.1.3-candidate-Windows-x64.zip`. Extract to a **permanent folder** (for example `C:\Apps\OpenCompanionListener`). Do not run the EXE from inside the ZIP.
+1. Download `OpenCompanionListener-v0.1.3-Windows-x64.zip` and `SHA256SUMS.txt` from the release page. Compare `Get-FileHash -Algorithm SHA256 .\OpenCompanionListener-v0.1.3-Windows-x64.zip` with the listed checksum. Extract to a **permanent folder** (for example `C:\Apps\OpenCompanionListener`). Do not run the EXE from inside the ZIP.
 2. Run `OpenCompanionListener.exe`. **No browser window opens automatically.** Find the icon in the Windows notification area, right-click **Open GUI**, or double-click the icon. The dashboard is `http://127.0.0.1:17993/` on this PC only.
 3. In Settings, set the Windows PC's **Listen IP**, the **Trusted Companion server IP**, and API port (default **17992**). Save settings.
 4. Copy the 64-character pairing key from Settings to the custom Companion connection. Do not publish or screenshot it.
@@ -49,7 +49,7 @@ The distribution includes the **module source folder and dependency lockfile**:
 
 Copy this folder to the *developer / extra module parent path* configured in Bitfocus Companion. It is not a ZIP-based in-app upload.
 
-Use Companion 4.1+ with API 1.13/node22 support and Node 22.8+ within the 22.x line. This is the API minimum; an actual Companion host has not yet completed candidate smoke testing. In a staging copy, run `npm ci --omit=dev --ignore-scripts --no-audit --no-fund`, `npm run validate`, then `npm test`, stopping on any failure. Dependencies are downloaded during installation; normal use needs no cloud connection.
+Use Companion 4.1+ with API 1.13/node22 support and Node 22.8+ within the 22.x line. This is the API minimum. The owner reports successful corrected-module installation on ZORIN with 28 passing tests; full host/migration coverage is not claimed. In a staging copy, run `npm ci --omit=dev --ignore-scripts --no-audit --no-fund`, `npm run validate`, then `npm test`, stopping on any failure. Dependencies are downloaded during installation; normal use needs no cloud connection.
 
 Follow [first-install, upgrade and rollback instructions](docs/COMPANION-INSTALL.md). Export the Companion configuration before upgrades and stop the test host before replacing its module. Reload only when safe; restarting Companion interrupts connections.
 
@@ -115,7 +115,7 @@ The Go module has no external dependencies. Python 3.11+ is needed only for dete
 
 ## License
 
-Project code is MIT licensed. See [third-party notices](THIRD_PARTY_NOTICES.md) for the Go binary license and the unresolved artwork provenance gate. Community contributions are welcome. The future Linux backend and optional visual automation builder are not implemented yet.
+Project code and project artwork are MIT licensed. See [third-party notices](THIRD_PARTY_NOTICES.md) for the Go binary license and the owner-confirmed artwork provenance. Community contributions are welcome. The future Linux backend and optional visual automation builder are not implemented yet.
 
 ## Forking and contributing
 

@@ -8,9 +8,10 @@ a future switch to a separate module parent instead of replacing the old folder.
 The module targets Companion **4.1 or later with API 1.13 and the node22 runtime**.
 The [official compatibility matrix](https://bitfocus.github.io/companion-module-base/)
 lists 4.1 as the first host supporting base 1.13. This is an API minimum, not
-completed host certification: actual Companion import/migration testing remains
-a release gate. Use Node **22.8+ within the 22.x line** for installation; the
-candidate was tested with Node 22.23.4 and base 1.13.6. Node 20/24 are not the
+completed host certification. The owner reports corrected-module installation
+on ZORIN with 28 passing tests; detailed import/migration coverage remains
+incomplete. Use Node **22.8+ within the 22.x line** for installation; the
+release was tested with Node 22.23.4 and base 1.13.6. Node 20/24 are not the
 declared module runtime.
 
 The ZIP is a developer/extra module folder, **not a packaged in-app upload**.
@@ -20,7 +21,7 @@ needed once for installation. The Windows listener requires neither npm nor Node
 
 ## Prepare without touching an active installation
 
-1. Extract the candidate ZIP to a staging location.
+1. Verify `OpenCompanionListener-v0.1.3-Companion-Module.zip` against the release's `SHA256SUMS.txt`, then extract it to a staging location.
 2. Enter `companion-module-community-openlistener` in PowerShell or Bash.
 3. Check `node --version` reports 22.x, then run each command and stop on failure:
 
@@ -31,7 +32,7 @@ needed once for installation. The Windows listener requires neither npm nor Node
    ```
 
 4. Export the existing Companion configuration before upgrades. Prepare on an
-   isolated test host first; do not test this candidate against live buttons.
+   isolated test host first, before switching active buttons to the new module.
 5. Use the developer/extra module **parent** directory configured in Companion.
    The folder inside it must be named `companion-module-community-openlistener`.
 

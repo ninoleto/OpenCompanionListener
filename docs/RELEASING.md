@@ -1,9 +1,13 @@
 # Release workflow (maintainer and contributors)
 
-Publication is on HOLD. The current work produces local review candidates only.
-Do not push, tag, upload or replace published assets as part of this workflow.
-Preserve the supplied v0.1.3 snapshots. If v0.1.3 has been publicly distributed,
-release the fixes under a new patch version after the gates below pass.
+The owner authorizes the first public v0.1.3 release, including public repository
+creation, source push, annotated tag and release assets. GitHub CLI authenticated
+as `ninoleto` and created the empty public `ninoleto/OpenCompanionListener`
+repository with Issues enabled; `origin` points there. Earlier 404-based stops
+are historical. The release uses the corrected EXE with SHA-256
+`510696b6fba8331bfef6d929013213fea15f43f3dde78f7db34c8370dac97f83`.
+Preserve supplied snapshots and report incomplete manual coverage honestly.
+Never replace a published version's tag or assets; later fixes need a patch release.
 
 ## Toolchain and checks
 
@@ -69,9 +73,14 @@ cmp dist/candidate-1/SHA256SUMS.txt dist/candidate-2/SHA256SUMS.txt
 
 Choose fresh output directories on subsequent runs; existing candidates are
 never overwritten. ZIP entries have sorted names, fixed timestamps/permissions
-and no compression so zlib versions cannot change them. Text comes from Git
-objects with canonical LF, independent of checkout CRLF conversion. Two local
-builds prove repeatability on that toolchain; cross-host equivalence still needs
+and no compression so zlib versions cannot change them. Text comes from
+`git archive` and follows Git attributes and configuration. Verification found
+CRLF conversion in six text files without an explicit `eol=lf` attribute,
+including LICENSE and go.mod, under the local `core.autocrlf=true` configuration.
+The archived bytes match the candidate manifest and differ from their Git blobs
+only by those line endings. Do not assume every archive entry has canonical LF
+or claim cross-host byte identity. Two local builds prove repeatability on that
+toolchain/configuration; cross-host equivalence still needs
 an independent builder. CI repeats the build on Linux but has not been run
 remotely as part of local preparation.
 
@@ -102,28 +111,50 @@ After the owner exited the existing listener through its tray, the 2026-11-11
 validation run passed with exit 0 and confirmed the original EXE/settings/startup
 value were unchanged. See HANDOFF.md for exact evidence and unperformed checks.
 
-## Remaining release gates
+## Verification scope
 
-Follow `SMOKE_TEST.md` on isolated Windows 10/11 and Companion hosts. Unit tests
+Use `SMOKE_TEST.md` for continuing verification on isolated Windows 10/11 and Companion hosts. Unit tests
 and a PE build cannot prove tray, sign-in startup, focus/UIPI, key/mouse holds,
 all presets, real-host import/export migrations or rollback behavior.
+The owner's partial working-function and ZORIN installation reports are now
+recorded there, separately from detailed procedures that remain unverified.
+The running listener matches the corrected EXE; manual-test-time identity is
+still awaiting confirmation. Do not claim complete Windows configuration coverage.
 
-Record icon authorship and redistribution permission in THIRD_PARTY_NOTICES.md.
-If unknown, keep publication blocked; do not infer a license grant. The package
+Artwork provenance and MIT inclusion are now recorded in THIRD_PARTY_NOTICES.md
+from the owner's confirmation, with matching packaged and embedded bytes.
+A completed Defender scan of the corrected EXE reported no threats on
+2026-11-11; versions and limitations are recorded in the audit. The package
 includes Go's notice. Bundling Node dependencies later requires all corresponding
 notices, including the upstream base license absent from its npm tarball.
 
-Confirm previous distribution status and the actual owner/repository URL. Fill
-manifest repository/bugs and security-reporting links with real destinations;
-never invent them. If a patch version is required, update Go status, dashboard,
-package.json, lockfile, manifest and docs together, then rerun validation/builds.
+The owner identifies this as the first public release and explicitly approves
+publication with the documented testing limits. The module manifest now points
+to the actual repository and Issues URLs. No additional manual cases are marked
+passed by this approval. Any later behavior changes require a new version.
 
-## Eventual publishing (separately authorized, not done here)
+## Final packaging and publishing
 
-Only after the owner approves a concrete reviewed candidate and the gates above
-are recorded: push the source, tag its tested commit with a new unused version,
-upload the verified archives and checksums, and independently download/install
-them. Do not claim a release shipped before that independent installation.
-Keep older tags/assets intact. Use GITHUB_RELEASE.txt as a draft and describe
-remaining limitations honestly. A release rollback restores both the old EXE
-and the backed-up Companion module/configuration; do not overwrite snapshots.
+Commit reviewed publication documentation on `fix/v0.1.3-publication`. Build
+twice into fresh directories with the command below, choosing a new output
+directory for the second run:
+
+```powershell
+py -3.13 tools/package_release.py --release --output dist/release-1
+```
+
+This opt-in flag changes only archive names and BUILD-INFO publication labeling;
+build flags and content selection are unchanged. Compare both SHA256SUMS files
+and require the EXE hash above. Validate CRCs, source manifest, licenses and the
+extracted module's clean install, manifest and tests. Candidate-mode CI remains
+available without the flag.
+
+Final names omit `-candidate`. Upload Windows, Companion module and Source ZIPs,
+BUILD-INFO.json and SHA256SUMS.txt together so every checksum entry has an asset.
+Create `main` at the verified release commit while retaining the development
+branch locally. Push main, make it the public default, and create/push annotated
+tag `v0.1.3` only if unused. Publish with GITHUB_RELEASE.txt as the release body.
+Download all public assets independently and compare checksums and EXE identity.
+Record publication separately from any independent interactive installation that
+has not been performed. Keep older tags/assets intact. Rollback restores the old
+EXE and matching backed-up Companion module/configuration, not a rewritten release.

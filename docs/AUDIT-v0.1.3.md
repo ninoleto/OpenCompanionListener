@@ -1,6 +1,6 @@
 # v0.1.3 pre-publication audit — 2026-11-11
 
-## Final-validation preparation (latest session)
+## Final validation — limited executable smoke PASS (latest session)
 
 Candidate source remains `58b9f14821326cae0f6d92a9f1a379babff14c69` on
 `fix/v0.1.3-publication`. No application, module, built archive, working
@@ -11,7 +11,9 @@ Publication still requires the owner's explicit approval.
   as the owner of port 17993 connections. The first permitted CIM query found no
   LISTENING entry, while netstat subsequently showed established/closing sockets
   owned by the still-running process. The owner received its PID/path and tray
-  Exit instructions. No automatic termination or live-dashboard request occurred.
+  Exit instructions, then confirmed "Exited". A fresh check found no listener
+  process and no listening socket; remaining TCP entries were closing/time-wait.
+  No automatic termination or live-dashboard mutation occurred.
 - Existing candidate checksums and the selected smoke EXE were reverified against
   the archive and BUILD-INFO.json: PASS. The source commit and executable hash
   are unchanged from the verified package below.
@@ -23,13 +25,34 @@ Publication still requires the owner's explicit approval.
   builder/hold/release, mouse/scroll, existing-button and all-preset observations.
   Manual startup tests explicitly require an isolated account/VM because changing
   LOCALAPPDATA does not isolate the HKCU startup value.
-- The executable smoke test is **pending user tray exit** in this session.
-  No candidate start/authentication/exit result is claimed yet. Existing Go/Node
-  results below were not rerun for these documentation-only changes.
+- Node 22.23.4 `node tools/smoke_listener.cjs .cache/evidence/OpenCompanionListener.exe`
+  ran through an ignored local preservation wrapper: **PASS, exit 0**. It used
+  fresh temporary LOCALAPPDATA, a random test key and a loopback-only ephemeral
+  API port, without sending desktop input or changing startup settings.
 
-**Decision: HOLD.** Next: confirm the owner's tray exit, recheck process/port,
-run the existing isolated executable smoke test, and record only its observed
-results. Full manual/host checks and the other release gates remain open.
+| Executable check | Confirmed result |
+| --- | --- |
+| Candidate startup/local dashboard | API starts; dashboard GET `/` returns HTTP 200. |
+| Dashboard state guards | Missing custom header and foreign Host requests return HTTP 403. |
+| Node-to-Go authentication | Correctly signed status succeeds and reports v0.1.3. |
+| Save/restart replay handling | A consumed signed request returns HTTP 401 after save and restart; fresh signed status succeeds. |
+| Duplicate instance | Second candidate exits 0; first candidate continues running. |
+| Pairing-key rotation | Only the temporary test key changes; persistence verified, old key rejected HTTP 401, new key accepted. |
+| Candidate shutdown | `/ui/exit` produces process exit 0. No listener process or listening port 17993 remains. |
+| Existing installation preservation | Original EXE and current-user settings SHA-256 unchanged; existing HKCU startup value unchanged. |
+
+No tray initialization error was observed by the script. This is not visual
+verification of the icon, menu or browser behavior. No input, sign-in startup,
+real Companion import/migration, ZORIN installation or paired-device test was
+performed. Existing Go/Node results below were not rerun for these documentation-
+only changes. The original listener remains stopped after the owner's tray exit;
+the agent did not relaunch it. Source code and all candidate archives are unchanged.
+
+**Decision: HOLD.** Next: complete the remaining manual Windows/Companion checklist
+on isolated test installations. Artwork rights, successful antivirus verification,
+owner distribution/version/repository decisions and explicit publication approval
+remain open gates. The earlier port-blocked attempt below is historical evidence;
+the successful limited test above supersedes it.
 
 ## Publication-fix continuation (current status)
 

@@ -3,6 +3,12 @@
 **Candidate status: not yet manually verified.** Automated regression results
 are recorded separately in HANDOFF.md; they do not check these boxes.
 
+On 2026-11-11 the limited executable smoke tool passed (exit 0): candidate start,
+local dashboard/authority checks, signed authentication, save/restart replay
+rejection, duplicate-instance exit, temporary-key rotation and clean shutdown.
+The installed EXE, current-user settings and startup value were unchanged.
+Visible tray behavior and all interactive checks below remain unverified.
+
 Record candidate source commit and ZIP/EXE SHA-256, Windows edition/build,
 Companion version, tester and date before testing. Use an isolated test account
 and exported/copied Companion configuration; never unreviewed code on live buttons.

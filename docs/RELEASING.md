@@ -97,8 +97,10 @@ For a limited native-binary check on an isolated Windows account, run
 port, gives the child a fresh LOCALAPPDATA fixture under .cache, and checks UI
 guards, signed Node-to-Go status, settings/replay/key rotation, duplicate process
 exit and shutdown. It injects no input, opens no browser/apps and writes no
-startup registry settings. It does not replace the manual smoke checklist; the
-local session could not run it because port 17993 was already occupied.
+startup registry settings. It does not replace the manual smoke checklist.
+After the owner exited the existing listener through its tray, the 2026-11-11
+validation run passed with exit 0 and confirmed the original EXE/settings/startup
+value were unchanged. See HANDOFF.md for exact evidence and unperformed checks.
 
 ## Remaining release gates
 

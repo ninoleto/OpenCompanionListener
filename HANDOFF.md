@@ -1,6 +1,22 @@
 # Development handoff — Open Companion Listener
 
-## 2026-11-12 final release authorized — owner live Windows PASS (latest)
+## 2026-11-12 FINAL: v0.1.4 published and verified; v0.1.3 retired (latest)
+
+- **Branch/commits:** `fix/v0.1.4-module-package`; GitHub `main` received the tested history by fast-forward, including owner-PASS documentation commit `f3d6e6e50f1d5cdce2601cd1d01e9e8be65fd3fb`. Annotated `v0.1.4` points to the exact packaged source `30be74c8841594d67a4aaf49ee5cc4f6db36c827`. This final documentation-only record follows publication; application source and release bytes remain frozen.
+- **Owner testing:** live Windows PASS for EXE, tray, dashboard and existing Companion buttons. The owner's final-release instruction superseded the earlier hold and expressly authorized old release/tag retirement only after public verification.
+- **Published:** https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.4 — public, non-draft, non-prerelease, latest. Prepared notes finalized with the owner PASS, current validation link and frozen source/build-metadata explanation. All five existing files uploaded: Windows ZIP, Companion TGZ, source ZIP, BUILD-INFO.json and SHA256SUMS.txt.
+- **Exact local release files:** `dist/release-v0.1.4/OpenCompanionListener-v0.1.4-Windows-x64.zip`; `community-openlistener-0.1.4.tgz`; `OpenCompanionListener-v0.1.4-Source.zip`; `BUILD-INFO.json`; `SHA256SUMS.txt` (all in that directory). Final EXE SHA-256 remains `b8f74decb94e9e60ec6b4015cb1df7a95e2cdd806add3f72de0ff5dd0d6847b5`; TGZ remains `949ab82e84ebf9cf0ccdaff3d811bc4486af41adfcf0a20c3f823928a299b725`.
+- **Verification PASS:** existing five files match the prior reproduction byte-for-byte; all four recorded checksums, ZIP CRC/source manifests, EXE/TGZ identity pass. Public release page/API/body/latest state and annotated tag target verified. All five files independently downloaded without authentication, matching original bytes, sizes, GitHub digests and downloaded SHA256SUMS. No artifact was rebuilt or changed.
+- **GitHub Actions:** automatic push runs `43274014863` (source/tag `30be74c`) and `43274014799` (validation `f3d6e6e`) completed successfully before retirement. No additional test/audit workflow was manually started. Existing local automated and owner results remain in the validation document.
+- **v0.1.3 retirement:** only after those checks passed, deleted the v0.1.3 GitHub release and remote tag. Subsequent API checks confirm both absent; v0.1.4 release ID, asset identities/digests and annotated tag unchanged. Old release commit `0f988d4eff11b20203b98ad9fd5a35308ef55e9e` remains accessible and an ancestor of main. No history rewrite/force-push. Local old archives and local v0.1.3 tag remain as rollback records.
+- **Files changed this final-release session:** HANDOFF.md, docs/VALIDATION-v0.1.4.md, GITHUB_RELEASE.txt, README.md, docs/COMPANION-INSTALL.md and CHANGELOG.md only. No code, working module/TGZ, artwork, installation, settings or startup state changed. Final evidence stays ignored under `.cache/v0.1.4/`; independent downloads are in `public-release-download-v0.1.4/` there.
+- **Limitations/security:** owner PASS does not establish every OS build, preset, startup/sign-in, interruption or rollback case. No fresh antivirus scan or separate agent-driven desktop install was performed. Existing unsigned executable, unencrypted HTTP, desktop authority and replay limitations remain documented.
+- **Rollback:** preserve Git history, v0.1.4 tag and published asset bytes. Use local previous EXE/module/configuration backups for deployment rollback; further public fixes require a new version.
+
+**Single next safe action:** monitor v0.1.4 user reports and address any confirmed defect in a new patch release without replacing its tag or assets.
+
+
+## 2026-11-12 final release authorized — owner live Windows PASS (historical)
 
 - **Branch/commit:** `fix/v0.1.4-module-package`; packaged source remains `30be74c8841594d67a4aaf49ee5cc4f6db36c827`. This documentation-only commit records release authorization and will be pushed with the tested source. The v0.1.4 tag must identify the frozen artifact source; later documentation commits do not change the built files.
 - **Owner PASS:** live Windows testing passed: the v0.1.4 EXE, tray, dashboard and existing Companion buttons work. This supersedes the previous publication hold and pending owner smoke confirmation. Detailed all-preset, startup, OS-matrix and interruption cases are not inferred from the report.

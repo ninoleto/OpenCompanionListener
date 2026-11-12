@@ -1,6 +1,6 @@
 # v0.1.4 release verification
 
-Status: **owner live Windows PASS; final release authorized**. The owner confirms the EXE, tray, dashboard and existing Companion buttons work. Public release/download verification must pass before deleting the v0.1.3 GitHub release and tag. No rebuild is authorized.
+Status: **v0.1.4 published and publicly verified; owner live Windows PASS**. All five anonymous downloads match the original artifacts and SHA256SUMS. After successful public verification and both GitHub checks, the v0.1.3 GitHub release and remote tag were removed as explicitly authorized. Git history and v0.1.4 remain intact. No local rebuild or artifact change occurred.
 
 Scope: finish module packaging and documentation, integrate the owner's supplied logo in the Windows EXE, tray and dashboard only, and correct version labels. Preserve dashboard layout/colors, listener behavior, protocol, action/preset IDs and migration scripts. Approved ICO/128px PNG supplied on 2026-11-12 and integrated unchanged; the SYSO was regenerated with the existing tool.
 
@@ -19,8 +19,12 @@ Scope: finish module packaging and documentation, integrate the owner's supplied
 | Live Windows EXE, tray, dashboard and existing Companion buttons | OWNER PASS (2026-11-12); detailed individual action/OS-matrix coverage unspecified |
 | All 38 presets and existing saved buttons | Unit coverage passes; most existing buttons owner-tested; complete preset/edge-case coverage not claimed |
 | Committed-source archives and checksums | PASS: two identical local builds, source/CRC/PE/module/hash checks |
-| Independent public downloads | Pending publication and verification |
-| GitHub Actions for release commit | Pending |
+| Independent public downloads | PASS: all five anonymous downloads match original bytes, sizes, GitHub digests and SHA256SUMS |
+| GitHub Actions | PASS: source/tag run 43274014863 and validation run 43274014799 |
+
+## Final publication — 2026-11-12
+
+[Public v0.1.4 release](https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.4): published/latest, notes verified, five assets verified by independent unauthenticated downloads. Annotated tag targets packaged source `30be74c8841594d67a4aaf49ee5cc4f6db36c827`; current owner evidence is in later documentation commits on main. The release files retain their original build-time metadata. After verification, v0.1.3 release/remote tag removal was confirmed while v0.1.4 assets/tag and old commit ancestry were preserved. See [HANDOFF.md](../HANDOFF.md) for the final sequence.
 
 ## Final local packages — 2026-11-12
 
@@ -66,7 +70,7 @@ This post-build evidence update is separate from the frozen packaged source.
 
 The first Windows build attempt returned exit 0 despite a blocked PowerShell `npx` subprocess. Its archive lacked `main.js`. Process-scoped execution-policy configuration resolves that local build failure; archive validation now explicitly rejects missing entrypoints. Tools 3.2.0 requires base 2.x and was rejected without changing the runtime dependency. Tools 2.9.1 supports the pinned API 1.13 runtime.
 
-## Required before publishing
+## Verification scope and coverage limits
 
 Do not repeat the owner's completed GUI import and working-button tests. The report concerns the production Companion host, not the isolated test profile. Exact installed TGZ/EXE hashes, host versions, all-preset coverage and rollback were not supplied; do not infer them. Compare the final module runtime payload with the existing candidate, and record final package hashes after committed-source builds. Approved artwork passes PE resource equality, native resource loading at 16/32/48/256px and mocked dashboard rendering in the unchanged layout. The owner now confirms live tray and dashboard PASS. Remaining applicable cases in [SMOKE_TEST.md](../SMOKE_TEST.md) stay unverified until observed.
 

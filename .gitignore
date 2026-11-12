@@ -10,6 +10,8 @@ settings.json.tmp
 OpenCompanionListener.exe
 *.exe
 *.zip
+*.tgz
+pkg/
 *.msi
 *.pdb
 *.test
@@ -21,6 +23,8 @@ node_modules/
 .npm/
 .cache/
 dist/
+# Local artwork delivery; selected ICO/PNG assets are tracked at their runtime paths.
+branding/approved/
 __pycache__/
 .DS_Store
 Thumbs.db

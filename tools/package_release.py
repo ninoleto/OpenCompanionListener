@@ -2,7 +2,8 @@
 """Build reproducible archives from HEAD, never from surrounding snapshots.
 
 Requires Python 3.11+ and the Go compiler in release-toolchain.json on PATH.
-Node dependencies are installed separately with npm ci on the Companion host.
+Node and npm are needed only when rebuilding the module. A verified TGZ can be
+reused with --module-package and --module-sha256. End users import the bundled TGZ.
 """
 import argparse
 import hashlib
@@ -13,6 +14,8 @@ from pathlib import Path, PurePosixPath
 import subprocess
 import tempfile
 import zipfile
+import shutil
+from validate_module_package import inspect_package, normalize_package
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE = 'companion-dev-modules/companion-module-community-openlistener/'
@@ -45,7 +48,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, help='New directory under dist/ (must not exist)')
     parser.add_argument('--release', action='store_true', help='Use final release names/metadata for an owner-authorized publication; does not upload')
+    parser.add_argument('--module-package', type=Path, help='Reuse an already verified TGZ without rebuilding or modifying it')
+    parser.add_argument('--module-sha256', help='Required SHA-256 of the reused TGZ')
     args = parser.parse_args()
+    if bool(args.module_package) != bool(args.module_sha256):
+        parser.error('--module-package and --module-sha256 must be used together')
+    reused_module = None
+    if args.module_package:
+        reused_module = args.module_package.read_bytes()
+        if digest(reused_module) != args.module_sha256.lower():
+            parser.error('reused module SHA-256 mismatch')
     output = (ROOT / args.output).resolve()
     dist = (ROOT / 'dist').resolve()
     if not output.is_relative_to(dist) or output == dist:
@@ -81,6 +93,12 @@ def main():
     version = pkg['version']
     assert version == manifest['version'] == lock['version']
     assert pkg['dependencies']['@companion-module/base'] == config['companionBase']
+    assert pkg['devDependencies']['@companion-module/tools'] == config['companionTools']
+    if reused_module is None and run('node', '--version').decode().strip() != config['node']:
+        raise RuntimeError('Node version does not match release-toolchain.json')
+    npm = shutil.which('npm.cmd' if os.name == 'nt' else 'npm')
+    if reused_module is None and not npm:
+        raise RuntimeError('npm is required on the build machine')
     flags = ['-trimpath', '-buildvcs=false', '-ldflags=-s -w -H windowsgui']
     dist.mkdir(exist_ok=True)
     # A fresh source path on each invocation also checks path independence.
@@ -94,12 +112,31 @@ def main():
         run('go', 'vet', './...', cwd=source_root / 'listener', env=env)
         run('go', 'build', *flags, '-o', str(executable), '.', cwd=source_root / 'listener', env=env)
         binary = executable.read_bytes()
+        module_root = source_root / MODULE
+        build_env = os.environ.copy()
+        # The upstream tool invokes npx through Windows PowerShell. Scope this
+        # to the build process; never alter a user/machine execution policy.
+        if os.name == 'nt':
+            build_env['PSExecutionPolicyPreference'] = 'Bypass'
+        tgz_name = f'community-openlistener-{version}.tgz'
+        if reused_module is None:
+            run(npm, 'ci', '--ignore-scripts', '--no-audit', '--no-fund', cwd=module_root, env=build_env)
+            run(npm, 'run', 'validate', cwd=module_root, env=build_env)
+            run(npm, 'test', cwd=module_root, env=build_env)
+            run(npm, 'run', 'build', cwd=module_root, env=build_env)
+            module_binary = normalize_package((module_root / tgz_name).read_bytes(), version)
+        else:
+            module_binary = reused_module
+        module_files = inspect_package(module_binary, version)
     info = json_bytes({
-        'status': 'RELEASE PACKAGE - OWNER AUTHORIZED' if args.release else 'LOCAL CANDIDATE - NOT APPROVED FOR PUBLICATION',
+        'status': 'LOCAL RELEASE PACKAGE - NOT PUBLISHED' if args.release else 'LOCAL CANDIDATE - NOT APPROVED FOR PUBLICATION',
         'version': version, 'sourceCommit': commit, 'toolchain': config,
         'target': 'windows/amd64', 'goamd64': 'v1', 'cgo': False, 'goFlags': flags,
-        'exeSHA256': digest(binary), 'moduleDependenciesBundled': False,
-        'dependencyInstall': 'npm ci --omit=dev --ignore-scripts --no-audit --no-fund',
+        'exeSHA256': digest(binary), 'moduleDependenciesBundled': True,
+        'modulePackageSHA256': digest(module_binary),
+        'modulePackageOrigin': 'verified TGZ reused byte-for-byte' if reused_module is not None else 'built from source',
+        'moduleFilesSHA256': {name: digest(data) for name, data in sorted(module_files.items())},
+        'moduleInstall': 'Companion Modules > Import module package',
         'sourceFilesSHA256': {name: digest(data) for name, data in sorted(files.items())},
     })
     output.mkdir()
@@ -109,12 +146,7 @@ def main():
         **files, 'OpenCompanionListener.exe': binary, 'BUILD-INFO.json': info,
     })
     archive(output / (prefix + '-Source.zip'), {**files, 'BUILD-INFO.json': info})
-    module_files = {name.removeprefix(MODULE): data for name, data in files.items() if name.startswith(MODULE)}
-    module_files['INSTALL.md'] = files['docs/COMPANION-INSTALL.md']
-    module_files['BUILD-INFO.json'] = info
-    archive(output / (prefix + '-Companion-Module.zip'), {
-        'companion-module-community-openlistener/' + name: data for name, data in module_files.items()
-    })
+    (output / tgz_name).write_bytes(module_binary)
     (output / 'BUILD-INFO.json').write_bytes(info)
     checksums = ''.join(f'{digest(path.read_bytes())}  {path.name}\n' for path in sorted(output.iterdir()))
     (output / 'SHA256SUMS.txt').write_text(checksums, encoding='utf-8', newline='\n')

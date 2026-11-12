@@ -1,102 +1,47 @@
-# Companion module installation and rollback
+# Install the Companion module
 
-For final validation on an existing ZORIN installation, use the detailed
-[ZORIN staging/migration/rollback runbook](ZORIN-VALIDATION.md). It keeps the
-installed module intact, tests copied configuration in isolation, and describes
-a future switch to a separate module parent instead of replacing the old folder.
+v0.1.4 is a candidate pending the checks in [release verification](VALIDATION-v0.1.4.md). These steps describe its packaged installation; they do not claim it is already published.
 
-The module targets Companion **4.1 or later with API 1.13 and the node22 runtime**.
-The [official compatibility matrix](https://bitfocus.github.io/companion-module-base/)
-lists 4.1 as the first host supporting base 1.13. This is an API minimum, not
-completed host certification. The owner reports corrected-module installation
-on ZORIN with 28 passing tests; detailed import/migration coverage remains
-incomplete. Use Node **22.8+ within the 22.x line** for installation; the
-release was tested with Node 22.23.4 and base 1.13.6. Node 20/24 are not the
-declared module runtime.
+Use Companion 4.1 or later with the node22 runtime. Companion supplies the runtime and the `.tgz` contains the module's dependencies. End users do not need a terminal, Node.js installation, npm commands or a developer folder.
 
-The ZIP is a developer/extra module folder, **not a packaged in-app upload**.
-It contains source, tests, manifest, license and a locked dependency tree;
-node_modules and Node.js are not bundled. Download access to the npm registry is
-needed once for installation. The Windows listener requires neither npm nor Node.
+## First installation
 
-## Prepare without touching an active installation
+1. Download `community-openlistener-0.1.4.tgz` from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases) once v0.1.4 is available. Do not extract it.
+2. Open Companion's web interface on the Companion host itself. Select **Modules**, then **Import module package**.
+3. Select the downloaded file and confirm the import. Check that **Open Companion Listener**, version **0.1.4**, appears in the installed modules.
+4. On **Connections**, add **Open Companion Listener** under **Community**.
+5. Enter the Windows PC's IPv4 address, API port (default `17992`) and the private pairing key shown in the listener's **Settings**. For Companion on the same PC, use `127.0.0.1`.
+6. Save, wait for the connection to become OK, then add an action to a scratch button. Focus a harmless test document on Windows and test a key press.
+7. Under **Presets**, select the connection. There are 38 optional presets across five categories. Drag only the ones you want onto your pages.
 
-1. Verify `OpenCompanionListener-v0.1.3-Companion-Module.zip` against the release's `SHA256SUMS.txt`, then extract it to a staging location.
-2. Enter `companion-module-community-openlistener` in PowerShell or Bash.
-3. Check `node --version` reports 22.x, then run each command and stop on failure:
+For Windows installation, network settings and firewall configuration, see the [README](../README.md). The module cannot control a macOS or Linux desktop; Companion itself can run on a different supported host.
 
-   ```text
-   npm ci --omit=dev --ignore-scripts --no-audit --no-fund
-   npm run validate
-   npm test
-   ```
+## Updating an imported package
 
-4. Export the existing Companion configuration before upgrades. Prepare on an
-   isolated test host first, before switching active buttons to the new module.
-5. Use the developer/extra module **parent** directory configured in Companion.
-   The folder inside it must be named `companion-module-community-openlistener`.
+Export the full Companion configuration first and keep a private recovery backup. Import the newer `.tgz` through **Modules**, then select that version for the existing connection if Companion offers a version selector. Preserve the connection itself. Check the loaded version, connection status and existing buttons after a restart. Do not assume that importing another version automatically switches every connection.
 
-## First installation (Linux Companion host example)
+## Transition from the v0.1.3 development-folder installation
 
-Run only after the staging checks pass. Change the two example paths; neither
-is a deployment default. `set -e` makes a failed copy or directory check stop.
+The first release used a source folder rather than an importable package. Its `community-openlistener` connection ID, action IDs, options, presets and two upgrade scripts are retained in v0.1.4. The owner confirms GUI import, retained connection settings and working existing buttons on the production host; full migration and rollback coverage is not claimed. Unit tests cover legacy raw/wrapped values and expressions. See [verification](VALIDATION-v0.1.4.md) for the exact scope.
 
-```bash
-set -eu
-SRC="/path/to/staged/companion-module-community-openlistener"
-PARENT="$HOME/companion-module-active"
-DEST="$PARENT/companion-module-community-openlistener"
-test -f "$SRC/companion/manifest.json"
-test -d "$SRC/node_modules"
-mkdir -p "$PARENT"
-test ! -e "$DEST"
-cp -a "$SRC" "$DEST"
-```
+1. Export the configuration and preserve the old module folder and its dependencies. Keep a full private Companion data backup using the host's supported backup procedure. Backups may contain the pairing key.
+2. Test the transition on an isolated Companion profile first. Do not delete or recreate the existing connection.
+3. Stop that test instance. Move only its copied old module out of the configured development folder, or disable that folder in the test instance if it contains no other needed modules. Keep the backup outside module discovery. This one-time cleanup is for the old installation; the new package needs no development-folder setup.
+4. Restart the test instance, import the `.tgz` using **Modules**, and select version **0.1.4** for the existing connection. Keep the same connection ID and label.
+5. Confirm saved actions, all presets, pairing and page/button positions. Restart again and repeat representative buttons. Restore the pre-upgrade backup in isolation to check rollback before changing a working installation.
 
-Then reload the test Companion host and add the Open Companion Listener
-connection. Enter the Windows listener IP, port and private pairing key.
-
-## Upgrade (Linux Companion host example)
-
-Stop the test Companion host before changing its module directory. Export its
-configuration first. Set `SRC` and `PARENT` as above, then run:
-
-```bash
-set -eu
-SRC="/path/to/staged/companion-module-community-openlistener"
-PARENT="$HOME/companion-module-active"
-DEST="$PARENT/companion-module-community-openlistener"
-BACKUP="$HOME/openlistener-module-backup-$(date +%Y%m%d-%H%M%S)"
-test -f "$SRC/companion/manifest.json"
-test -d "$SRC/node_modules"
-test -d "$DEST"
-test ! -e "$BACKUP"
-mv "$DEST" "$BACKUP"
-if ! cp -a "$SRC" "$DEST"; then
-  echo "Copy failed. Keep Companion stopped; preserve the partial folder and restore $BACKUP."
-  exit 1
-fi
-echo "Previous module saved at $BACKUP"
-```
-
-On Windows, perform the same staging checks, stop Companion, move the existing
-module folder to a separate backup location, then copy the staged folder into
-the configured parent. Do not merge files into an old node_modules tree.
-
-Reload only when safe; restarting Companion interrupts connections. Confirm the
-module loads, all 38 optional presets appear, and existing buttons still work.
-Test raw and expression-based legacy shortcuts and both scroll directions.
-The additive migration preserves old signed scroll expressions in an advanced
-mode within the single scroll action. Invalid old values remain editable and
-are rejected at execution; no automatic guess is made about their intent.
-
-If the old migration already converted an expression to a literal, its original
-expression cannot be recovered from the converted action. Restore it from the
-pre-upgrade configuration export and test the fixed migration.
+Do not proceed on a production host if either transition or rollback fails. Record sanitized Companion logs and affected action options. Already-lost legacy expression text can only be recovered from a pre-upgrade backup.
 
 ## Rollback
 
-Stop Companion, move the candidate module aside, restore the saved module folder
-and the **matching pre-upgrade configuration export**, then restart and verify
-the old buttons. Configuration migrations may already have been saved, so
-restoring the module alone is insufficient. Never share pairing keys in logs.
+Stop Companion and restore the previous module together with its matching configuration/data backup using the host's restore procedure. For a previous development-folder installation, restore its original folder setting. For an imported package, select its saved prior version. Restart and verify the same connection and buttons. Restoring only module code does not reverse saved configuration changes. Keep the previous Windows EXE as well if updating the listener.
+
+## Import and connection problems
+
+- Use the `.tgz`, not the source ZIP or Windows ZIP. A source archive cannot be imported as a module.
+- If **Import module package** is missing, verify the Companion version. Newer versions permit local imports and can restrict imports from another computer; use the local interface.
+- If an old module still loads, check for a duplicate development-folder copy and the connection's selected version.
+- If authentication fails, check the listener's trusted source IP, key, API port and both clocks. After rotating the key, update the connection's secret field.
+- If a preset sends keys to the wrong application, focus the intended window. Presets do not select the target application.
+
+Developers building from source should use [DEVELOPMENT.md](DEVELOPMENT.md).

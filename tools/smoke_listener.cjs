@@ -87,7 +87,7 @@ async function main() {
     assert.equal((await httpCall(17993, 'GET', '/ui/state', {...uiHeaders, Host:'rebinding.example:17993'})).status, 403)
     const api = {host:'127.0.0.1', port}
     const status = await request(api, key, 'GET', '/v1/status')
-    assert.equal(status.version, '0.1.3')
+    assert.equal(status.version, require('../companion-dev-modules/companion-module-community-openlistener/package.json').version)
     const replayHeaders = makeHeaders(key, 'GET', '/v1/status', Buffer.alloc(0))
     assert.equal((await httpCall(port, 'GET', '/v1/status', replayHeaders)).status, 200)
     assert.equal((await ui('POST', '/ui/save', config)).status, 200)

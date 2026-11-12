@@ -1,8 +1,8 @@
-# Open Companion Listener 0.1.3
+# Open Companion Listener 0.1.4
 
 Free, open-source desktop control for Windows via Bitfocus Companion.
 
-Local publication-fix candidate; manual host verification is pending. Requires Companion 4.1+ with API 1.13/node22 support. For a source install use Node 22.x, `npm ci --omit=dev --ignore-scripts --no-audit --no-fund`, `npm run validate`, then `npm test` in a staging copy before replacing a module.
+Requires Companion 4.1+ with API 1.13/node22 support. Install `community-openlistener-0.1.4.tgz` through **Modules → Import module package**. Companion supplies the runtime; no separate Node.js or npm installation is needed. Export your configuration before upgrading and keep the existing connection and buttons.
 
 1. Install and run the Windows x64 listener on the controlled PC. It starts in the system tray without opening its dashboard.
 2. Right-click tray icon → **Open GUI**; configure the Windows Listen IP and Trusted Companion server IP. API default port is `17992`.

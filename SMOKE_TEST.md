@@ -1,4 +1,16 @@
-# v0.1.3 smoke test — Windows + Companion
+# Smoke test — Windows + Companion
+
+## v0.1.4 owner report — 2026-11-12
+
+The owner confirms that the v0.1.4 TGZ imported through Companion's GUI on the
+production Companion host, retained existing connection settings, connected,
+and ran most existing buttons successfully. Exact installed artifact hashes,
+host versions, individual button coverage, all presets and rollback were not
+specified. This is real-host evidence; it is not an isolated-profile test.
+Do not repeat completed tests or infer that every procedure below passed.
+See [v0.1.4 verification](docs/VALIDATION-v0.1.4.md) for current release gates.
+
+## Historical v0.1.3 evidence
 
 **Candidate status: partial owner-reported manual verification.** Automated
 regression results are recorded separately in HANDOFF.md. The detailed checklist

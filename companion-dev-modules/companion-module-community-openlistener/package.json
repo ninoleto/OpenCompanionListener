@@ -1,6 +1,6 @@
 {
   "name": "companion-module-community-openlistener",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Community Open Companion Listener connection module",
   "private": true,
   "type": "commonjs",
@@ -10,10 +10,14 @@
   },
   "scripts": {
     "test": "node --test src/*.test.cjs",
-    "validate": "node tools/validate-manifest.cjs"
+    "validate": "node tools/validate-manifest.cjs",
+    "build": "companion-module-build"
   },
   "dependencies": {
     "@companion-module/base": "1.13.6"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@companion-module/tools": "2.9.1"
+  }
 }

@@ -13,41 +13,40 @@ in the Windows archive. There are no external Go module dependencies.
 
 ## Companion module
 
-The Companion ZIP contains this project's source and `package-lock.json`;
-**it does not bundle Node.js or node_modules**. Install the locked runtime
-packages with `npm ci --omit=dev --ignore-scripts --no-audit --no-fund`.
-The direct dependency is `@companion-module/base` 1.13.6 (MIT). The lockfile
-records exact transitive versions, integrity hashes, and declared licenses.
-Dependency downloads are required for this install step; normal use is local.
-
-If a future distributor bundles node_modules, they must include each
-dependency's applicable copyright/license notices, including the upstream
-Companion base notice absent from its current npm tarball. A package.json
-license field alone is not a substitute for the full notice. This repository's
-builder deliberately does not create that kind of bundle.
+The v0.1.4 Companion TGZ bundles the runtime dependencies into `main.js` using
+official `@companion-module/tools` 2.9.1. It includes the builder's generated
+license notices in `LICENSE` and the upstream base notice in
+`COMPANION-BASE-LICENSE.txt` (also kept in the source module's `licenses/`).
+The direct runtime dependency is `@companion-module/base` 1.13.6 (MIT).
+`package-lock.json` records the locked runtime and development dependencies.
+Companion supplies Node.js; no Node.js executable or `node_modules` directory
+is redistributed. End users import the TGZ without npm or dependency downloads.
 
 ## Artwork
 
-The owner confirmed on 2026-11-11 that the application icon was created
-specifically for this project during development using programmatically drawn
-graphics, and was not copied from a third-party product. At the owner's
-direction, the project artwork in `OpenCompanionListener.ico`,
-`listener/ui/icon.png`, and the derived `listener/icon_windows_amd64.syso` is
-included under the project's MIT license and contributor copyright notice in
-`LICENSE`. This provenance statement is based on the owner's confirmation;
-the original drawing script was not found in the reviewed source.
+The owner supplied and approved the replacement logo on 2026-11-12 in
+`branding/approved/OpenCompanionListener-Approved-Logo/`. The approved design
+has upper magenta/violet signal arcs and lower cyan/teal C-shaped arcs on a dark
+navy square. This owner-provided project artwork is distributed with the
+project's MIT license; approval/provenance is owner-attested, not an independent
+authorship investigation.
 
-Verification on 2026-11-11 established that these files are byte-identical
-across the original project snapshot, supplied source ZIP, current checkout,
-and corrected candidate Windows/source ZIPs. The dashboard PNG is exactly the
-ICO's 128-pixel image. All seven icon images and the icon group embedded in the
-corrected EXE match the ICO. Running `tools/generate_icon_resource.py` in an
-isolated directory reproduced the checked-in resource byte-for-byte. The
-tracked artwork inventory contains these three files; no additional artwork
-was identified. See `docs/AUDIT-v0.1.3.md` for package and executable evidence.
+`OpenCompanionListener.ico` is an unchanged copy of the supplied ICO (10 sizes,
+16–256px). `listener/ui/icon.png` is the supplied 128px PNG, unchanged, for the
+existing compact dashboard slot. `listener/icon_windows_amd64.syso` is generated
+from that ICO using `tools/generate_icon_resource.py`; tray code uses embedded
+icon group 1. No artwork was redrawn, recolored, mirrored or generated from the
+traced vector files. Dashboard HTML/styles remain unchanged by this integration.
+
+The local delivery package, original master and unused EPS/SVG/PNG variants are
+preserved outside the tracked release inventory. Its SHA256SUMS entries were
+verified before integration. The approved original `APPROVED-ORIGINAL-1254.png`
+has SHA-256 `f0b3d58d11c31c24a61728489ee7fe994c9c52a3b41a422a155595ba253947ac`.
+The old icon's 2026-11-11 provenance/checks remain historical in
+`docs/AUDIT-v0.1.3.md` and Git history; they do not describe the new artwork.
 
 | Project artwork | SHA-256 |
 | --- | --- |
-| `OpenCompanionListener.ico` | `7b2b5a21fa9921180875ee6b3f9a8d8a30a2672ccce5506cfbc0a1c5d2a578dd` |
-| `listener/ui/icon.png` | `fe9f9b869c00d1493010c033d0f000b622124eb3108cd7f3ebc6e8547d801c50` |
-| `listener/icon_windows_amd64.syso` | `7f717b5729784f1755b12264b553525c010a45fac0969005b9dbcc6e466e68ea` |
+| `OpenCompanionListener.ico` | `87f1ab5a77dc69ddc7e3dd5d7d5fbcb0d5d089927062f3bc6f6d90a911c71932` |
+| `listener/ui/icon.png` | `792b20827d33297631b8c192384253963563cebcf44d462431fd47f54e643943` |
+| `listener/icon_windows_amd64.syso` | `82997efcbfc975cb2fcddf321fa70248a63cdbca954174147b790bc12f149f51` |

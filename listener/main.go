@@ -146,7 +146,7 @@ func (a *app) authHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")
 	if r.URL.Path == "/v1/status" {
-		_, _ = io.WriteString(w, `{"ok":true,"version":"0.1.3","platform":"windows"}`)
+		_, _ = io.WriteString(w, `{"ok":true,"version":"0.1.4","platform":"windows"}`)
 		return
 	}
 	var cmd Command

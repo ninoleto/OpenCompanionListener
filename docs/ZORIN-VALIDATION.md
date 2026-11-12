@@ -1,5 +1,9 @@
 # ZORIN: stage, validate, migrate and roll back safely
 
+**Historical v0.1.3 source-development runbook.** For v0.1.4 user installation,
+use [Companion GUI package import](COMPANION-INSTALL.md). The approval/status
+statements below describe the earlier validation session, not current release gates.
+
 This is an operator runbook, not a record of a ZORIN installation. No commands
 in this document have been run on the existing ZORIN host by this validation
 session. The existing module directory, Companion configuration, connections,

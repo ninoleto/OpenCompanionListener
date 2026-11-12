@@ -1,4 +1,4 @@
-# Architecture and protocol (v0.1.3)
+# Architecture and protocol (v0.1.4; wire format unchanged)
 
 ## Components and boundaries
 
@@ -94,6 +94,7 @@ All commands are JSON with a `type` field. Only listed fields are accepted (unre
 - `src/presets.cjs`: 38 optional presets, never automatically mapped to the user's grid.
 - `src/upgrades.cjs`: action migration from previous module versions. Must remain compatible with old stored config until explicitly deprecated and documented.
 - `@companion-module/base` is the only external runtime module dependency.
+- Release TGZs bundle the runtime dependencies and import through Companion's Modules page. End users do not install Node.js or npm; source builds are documented separately in [DEVELOPMENT.md](DEVELOPMENT.md).
 - Base 1.13.6 is pinned and its transitive dependencies are locked. API 1.13 requires at least Companion 4.1 per the upstream matrix; actual host smoke testing remains required. See [installation](COMPANION-INSTALL.md).
 - HTTP responses are capped at 8192 bytes; aborts/errors reject requests and a 3.5-second overall deadline also bounds continuously streaming peers and socket queueing.
 - Success logs say `OS accepted`: SendInput/ShellExecute acceptance is not evidence that a launched GUI initialized or completed a task. No child-process completion is tracked.

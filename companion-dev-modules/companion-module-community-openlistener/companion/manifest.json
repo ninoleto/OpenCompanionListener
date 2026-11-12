@@ -3,8 +3,8 @@
   "id": "community-openlistener",
   "name": "Open Companion Listener",
   "shortname": "OpenListener",
-  "description": "Free, independent Windows desktop input and application launcher",
-  "version": "0.1.3",
+  "description": "Send keyboard and mouse commands to a Windows PC and open applications, files and URLs",
+  "version": "0.1.4",
   "license": "MIT",
   "maintainers": [
     {

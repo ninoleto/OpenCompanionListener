@@ -1,6 +1,6 @@
 # v0.1.4 release verification
 
-Status: **not published; validation in progress**. Do not publish until final packages are verified. Preserve v0.1.3 unchanged.
+Status: **local release packages verified; not published**. Publication is explicitly on hold. Live Windows smoke and independent installation remain unverified. Preserve v0.1.3 unchanged.
 
 Scope: finish module packaging and documentation, integrate the owner's supplied logo in the Windows EXE, tray and dashboard only, and correct version labels. Preserve dashboard layout/colors, listener behavior, protocol, action/preset IDs and migration scripts. Approved ICO/128px PNG supplied on 2026-11-12 and integrated unchanged; the SYSO was regenerated with the existing tool.
 
@@ -10,7 +10,7 @@ Scope: finish module packaging and documentation, integrate the owner's supplied
 | --- | --- |
 | Windows Go 1.27.4 race checks | PASS: 15 top-level tests and 20 key subtests, exit 0 |
 | Go vet, CGO=1 and Windows/amd64 CGO=0 | PASS, exit 0 each |
-| Windows GUI executable build | PASS, exit 0; PE x64/GUI and embedded API/dashboard version verified; approved artwork resource checks pass; committed-source package verification follows the source freeze |
+| Windows GUI executable build | PASS, exit 0; PE x64/GUI and embedded API/dashboard version verified; approved artwork resource checks pass; final committed-source packages and approved artwork verified |
 | Node 22.23.4 module suite | PASS: 28/28, exit 0 |
 | Installed base 1.13.6 manifest validation | PASS, exit 0 |
 | Full npm dependency audit | PASS: zero advisories, exit 0 |
@@ -18,8 +18,39 @@ Scope: finish module packaging and documentation, integrate the owner's supplied
 | GUI import and connection configuration | Owner confirms GUI TGZ import on production Companion host, retained settings and working connection (2026-11-12) |
 | Real Windows input and launch checks through installed package | Owner reports most existing buttons working; individual action coverage unspecified |
 | All 38 presets and existing saved buttons | Unit coverage passes; most existing buttons owner-tested; complete preset/edge-case coverage not claimed |
-| Committed-source archives, checksums and independent downloads | Pending |
+| Committed-source archives and checksums | PASS: two identical local builds, source/CRC/PE/module/hash checks |
+| Independent public downloads/installation | Not performed; publication on hold |
 | GitHub Actions for release commit | Pending |
+
+## Final local packages — 2026-11-12
+
+Packaged source: `30be74c8841594d67a4aaf49ee5cc4f6db36c827`.
+`dist/release-v0.1.4/` and `dist/release-v0.1.4-reproduction/` are byte-identical
+across all five files: Windows ZIP, source ZIP, unchanged Companion TGZ,
+BUILD-INFO.json and SHA256SUMS.txt. Both build runs exit 0. All four checksums,
+ZIP CRCs, exact git-archive source contents/hashes, safe paths, notices and module
+manifest/runtime hashes pass. The module was copied, not rebuilt or reinstalled.
+
+The final extracted EXE is at
+`dist/release-v0.1.4-extracted/OpenCompanionListener.exe`, SHA-256
+`b8f74decb94e9e60ec6b4015cb1df7a95e2cdd806add3f72de0ff5dd0d6847b5`.
+All ten embedded icon frames and group 1 match the supplied approved ICO.
+Windows loads resource 1 at 16/32/48/256px without executing listener code.
+The exact approved 128px PNG is embedded and renders in the unchanged 44px
+dashboard logo slot; the mocked-data screenshot was visually inspected.
+No dashboard HTML/style or functional code changed during logo integration.
+
+Fresh branded Go race tests: 15 top-level + 20 subtests PASS, exit 0.
+CGO=1 and Windows/amd64 CGO=0 vet and GUI build: PASS, exit 0 each.
+Three negative packaging-argument/hash checks reject invalid reuse requests.
+The existing module files and original TGZ match their pre-integration fingerprints.
+Prior 28/28 module tests remain applicable and were not repeated.
+
+Live tray/startup/input smoke remains pending because the production listener
+is running. No live listener/Companion settings or startup registry were changed.
+No new antivirus result, remote CI, public download or independent installation
+is claimed. Publication is explicitly prohibited pending the owner's next instruction.
+This post-build evidence update is separate from the frozen packaged source.
 
 ## Continuation checks — 2026-11-12
 

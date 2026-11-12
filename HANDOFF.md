@@ -1,6 +1,19 @@
 # Development handoff — Open Companion Listener
 
-## 2026-11-12 v0.1.4 local release packages verified — publication held (latest)
+## 2026-11-12 final release authorized — owner live Windows PASS (latest)
+
+- **Branch/commit:** `fix/v0.1.4-module-package`; packaged source remains `30be74c8841594d67a4aaf49ee5cc4f6db36c827`. This documentation-only commit records release authorization and will be pushed with the tested source. The v0.1.4 tag must identify the frozen artifact source; later documentation commits do not change the built files.
+- **Owner PASS:** live Windows testing passed: the v0.1.4 EXE, tray, dashboard and existing Companion buttons work. This supersedes the previous publication hold and pending owner smoke confirmation. Detailed all-preset, startup, OS-matrix and interruption cases are not inferred from the report.
+- **Authorized sequence:** verify existing artifacts/checksums, push tested history, publish v0.1.4 with all five existing files, verify the public release and independently downloaded bytes, then delete only the old v0.1.3 GitHub release and tag. Stop on failure; never delete v0.1.3 after failed publication/verification. Preserve all Git commit history and v0.1.4.
+- **Files changed:** HANDOFF.md, docs/VALIDATION-v0.1.4.md and publication documentation only. No code/module/TGZ/logo/build output changed. Release notes distinguish frozen build-time records from current validation. No rebuild, new tests/audits or live-installation changes.
+- **Artifact identity:** existing final EXE SHA-256 `b8f74decb94e9e60ec6b4015cb1df7a95e2cdd806add3f72de0ff5dd0d6847b5`; TGZ `949ab82e84ebf9cf0ccdaff3d811bc4486af41adfcf0a20c3f823928a299b725`. Full existing checksums remain in `dist/release-v0.1.4/SHA256SUMS.txt`.
+- **Pending:** current checksum verification, remote push/publication/public-download verification and conditional old release/tag deletion. No success is claimed before evidence.
+- **Risk/rollback:** artifacts remain unsigned and existing security limits apply. Local v0.1.3 archives and commit history remain preserved even after the authorized GitHub release/tag removal.
+
+**Single next safe action:** verify the existing release bytes and checksums before any GitHub publication or deletion.
+
+
+## 2026-11-12 v0.1.4 local release packages verified — publication held (historical)
 
 - **Branch/commit:** `fix/v0.1.4-module-package`. Packaged application source is commit `30be74c8841594d67a4aaf49ee5cc4f6db36c827`. This later evidence-only update changes HANDOFF.md and docs/VALIDATION-v0.1.4.md, not the packaged application. BUILD-INFO.json identifies the frozen source exactly.
 - **Outcome/files:** approved ICO and 128px PNG copied unchanged; existing resource generator produced the SYSO used by EXE/tray. No logo redesign or dashboard layout/color change. The existing module/TGZ and application behavior remain unchanged. Packaging reuses the verified TGZ with mandatory SHA-256 verification; no module rebuild, npm install or new environment.

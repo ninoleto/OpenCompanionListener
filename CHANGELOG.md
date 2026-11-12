@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.4 — unreleased
+## 0.1.4 — 2026-11-12
 
 - Distribute a bundled Companion TGZ for **Modules → Import module package**; ordinary users no longer need Node.js, npm or a development-module folder.
 - Separate user installation and upgrade instructions from developer build instructions; update the dashboard and bundled help version labels.
@@ -8,7 +8,7 @@
 - Integrate the supplied owner-approved logo into the Windows executable, tray and dashboard without changing the dashboard layout or colors.
 - Retain listener behavior, the signed protocol, connection/action IDs, all 38 presets and both migration scripts. The owner confirms GUI import, retained connection settings, a working connection and most existing buttons on the production Companion host.
 
-Publication remains on hold. See [v0.1.4 validation](docs/VALIDATION-v0.1.4.md) for local package evidence and remaining live checks; v0.1.3 remains unchanged.
+Owner live Windows testing PASS: EXE, tray, dashboard and existing Companion buttons. See [v0.1.4 validation](docs/VALIDATION-v0.1.4.md) for artifact evidence and coverage limits.
 
 ## 0.1.3 — first public release (2026-11-11)
 

@@ -1,12 +1,12 @@
 # Install the Companion module
 
-v0.1.4 is a candidate pending the checks in [release verification](VALIDATION-v0.1.4.md). These steps describe its packaged installation; they do not claim it is already published.
+Install the bundled v0.1.4 package using the steps below. See [release verification](VALIDATION-v0.1.4.md) for owner-confirmed live testing and its scope.
 
 Use Companion 4.1 or later with the node22 runtime. Companion supplies the runtime and the `.tgz` contains the module's dependencies. End users do not need a terminal, Node.js installation, npm commands or a developer folder.
 
 ## First installation
 
-1. Download `community-openlistener-0.1.4.tgz` from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases) once v0.1.4 is available. Do not extract it.
+1. Download `community-openlistener-0.1.4.tgz` from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases). Do not extract it.
 2. Open Companion's web interface on the Companion host itself. Select **Modules**, then **Import module package**.
 3. Select the downloaded file and confirm the import. Check that **Open Companion Listener**, version **0.1.4**, appears in the installed modules.
 4. On **Connections**, add **Open Companion Listener** under **Community**.

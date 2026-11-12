@@ -1,6 +1,6 @@
 # v0.1.4 release verification
 
-Status: **local release packages verified; not published**. Publication is explicitly on hold. Live Windows smoke and independent installation remain unverified. Preserve v0.1.3 unchanged.
+Status: **owner live Windows PASS; final release authorized**. The owner confirms the EXE, tray, dashboard and existing Companion buttons work. Public release/download verification must pass before deleting the v0.1.3 GitHub release and tag. No rebuild is authorized.
 
 Scope: finish module packaging and documentation, integrate the owner's supplied logo in the Windows EXE, tray and dashboard only, and correct version labels. Preserve dashboard layout/colors, listener behavior, protocol, action/preset IDs and migration scripts. Approved ICO/128px PNG supplied on 2026-11-12 and integrated unchanged; the SYSO was regenerated with the existing tool.
 
@@ -16,10 +16,10 @@ Scope: finish module packaging and documentation, integrate the owner's supplied
 | Full npm dependency audit | PASS: zero advisories, exit 0 |
 | Official module build | PASS, exit 0; tools 2.9.1 bundled entrypoint, manifest, help and notices validated; runtime byte-identical to prior local candidate |
 | GUI import and connection configuration | Owner confirms GUI TGZ import on production Companion host, retained settings and working connection (2026-11-12) |
-| Real Windows input and launch checks through installed package | Owner reports most existing buttons working; individual action coverage unspecified |
+| Live Windows EXE, tray, dashboard and existing Companion buttons | OWNER PASS (2026-11-12); detailed individual action/OS-matrix coverage unspecified |
 | All 38 presets and existing saved buttons | Unit coverage passes; most existing buttons owner-tested; complete preset/edge-case coverage not claimed |
 | Committed-source archives and checksums | PASS: two identical local builds, source/CRC/PE/module/hash checks |
-| Independent public downloads/installation | Not performed; publication on hold |
+| Independent public downloads | Pending publication and verification |
 | GitHub Actions for release commit | Pending |
 
 ## Final local packages — 2026-11-12
@@ -46,10 +46,10 @@ Three negative packaging-argument/hash checks reject invalid reuse requests.
 The existing module files and original TGZ match their pre-integration fingerprints.
 Prior 28/28 module tests remain applicable and were not repeated.
 
-Live tray/startup/input smoke remains pending because the production listener
-is running. No live listener/Companion settings or startup registry were changed.
+At the local packaging checkpoint, live smoke was pending; the owner now
+confirms live Windows EXE/tray/dashboard/existing-button PASS. No live listener/Companion settings or startup registry were changed.
 No new antivirus result, remote CI, public download or independent installation
-is claimed. Publication is explicitly prohibited pending the owner's next instruction.
+is claimed. The owner now explicitly authorizes publication and conditional old-release removal.
 This post-build evidence update is separate from the frozen packaged source.
 
 ## Continuation checks — 2026-11-12
@@ -68,6 +68,6 @@ The first Windows build attempt returned exit 0 despite a blocked PowerShell `np
 
 ## Required before publishing
 
-Do not repeat the owner's completed GUI import and working-button tests. The report concerns the production Companion host, not the isolated test profile. Exact installed TGZ/EXE hashes, host versions, all-preset coverage and rollback were not supplied; do not infer them. Compare the final module runtime payload with the existing candidate, and record final package hashes after committed-source builds. Approved artwork passes PE resource equality, native resource loading at 16/32/48/256px and mocked dashboard rendering in the unchanged layout. Actual visible-tray testing remains pending while the production listener runs. Remaining applicable cases in [SMOKE_TEST.md](../SMOKE_TEST.md) stay unverified until observed.
+Do not repeat the owner's completed GUI import and working-button tests. The report concerns the production Companion host, not the isolated test profile. Exact installed TGZ/EXE hashes, host versions, all-preset coverage and rollback were not supplied; do not infer them. Compare the final module runtime payload with the existing candidate, and record final package hashes after committed-source builds. Approved artwork passes PE resource equality, native resource loading at 16/32/48/256px and mocked dashboard rendering in the unchanged layout. The owner now confirms live tray and dashboard PASS. Remaining applicable cases in [SMOKE_TEST.md](../SMOKE_TEST.md) stay unverified until observed.
 
 The current working listener and its settings must remain untouched. No private keys, account data, development snapshots or test profiles belong in public archives.

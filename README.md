@@ -4,7 +4,7 @@ Open Companion Listener receives commands from Bitfocus Companion and sends keys
 
 The listener runs in the Windows notification area. Companion can run on the same PC or another supported Companion host. The project is free and open source under the MIT license; normal operation is local and requires no project account or cloud service.
 
-**v0.1.4 is in validation and has not been published.** See [release verification](docs/VALIDATION-v0.1.4.md) for completed and pending checks. Public downloads are listed on [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases).
+**v0.1.4:** get the Windows ZIP and Companion TGZ from [GitHub Releases](https://github.com/ninoleto/OpenCompanionListener/releases/tag/v0.1.4). The owner confirms live Windows EXE, tray, dashboard and existing Companion buttons work. See [release verification](docs/VALIDATION-v0.1.4.md) for test scope.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ Download `SHA256SUMS.txt` with the release files. On Windows, compare each file'
 
 ## Install the Windows listener
 
-1. Download `OpenCompanionListener-v0.1.4-Windows-x64.zip` from the release once available. Extract it to a permanent folder and run `OpenCompanionListener.exe` outside the ZIP.
+1. Download `OpenCompanionListener-v0.1.4-Windows-x64.zip` from the release. Extract it to a permanent folder and run `OpenCompanionListener.exe` outside the ZIP.
 2. Find the notification-area icon, including under hidden icons. Double-click it or choose **Open GUI** from its menu. The dashboard does not open automatically.
 3. Open **Settings**. If Companion runs on this PC, leave both addresses at `127.0.0.1`. Otherwise enter this Windows PC's IPv4 address as **Listen IP address** and the Companion host's IPv4 address as **Trusted Companion server IP**. Leave the API port at `17992` unless you need a different port, then save.
 4. For a remote Companion host, allow that API port through Windows Firewall on the private network, restricted to the Companion host's address. Never forward it to the Internet.
